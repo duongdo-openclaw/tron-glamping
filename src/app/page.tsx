@@ -109,16 +109,12 @@ export default function Home() {
     <div className="min-h-screen bg-[#f8f4ee] text-[#1f1d1a]">
       <header className="sticky top-0 z-30 border-b border-[#e9e0d4] bg-[#f8f4ee]/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-          <div>
-            <div className="flex items-center gap-3">
-              <img
-                src={content.logoUrl}
-                alt={content.brandName}
-                className="h-9 w-9 rounded-full bg-white"
-              />
-              <div className="text-lg font-semibold tracking-[0.08em] text-[#4b5a44] uppercase">{content.brandName}</div>
-            </div>
-            <div className="text-xs text-[#7c7469]">{content.brandTagline}</div>
+          <div className="flex items-center">
+            <img
+              src={content.logoUrl}
+              alt={content.brandName}
+              className="h-9 w-auto bg-transparent"
+            />
           </div>
           <a href="#booking" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white">Đặt chỗ</a>
         </div>
