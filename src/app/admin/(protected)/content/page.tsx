@@ -53,9 +53,20 @@ export default function AdminContentPage() {
       {msg && <div className="mt-4 rounded-xl bg-slate-100 px-4 py-3 text-sm">{msg}</div>}
 
       <section className="mt-6 grid gap-4 rounded-3xl border border-[#e7dece] bg-white p-5">
+        <Field label="Brand name" value={content.brandName} onChange={(v) => setContent({ ...content, brandName: v })} />
+        <Field label="Brand tagline" value={content.brandTagline} onChange={(v) => setContent({ ...content, brandTagline: v })} />
+        <Field label="Logo URL" value={content.logoUrl} onChange={(v) => setContent({ ...content, logoUrl: v })} />
+        <Field label="Hero image URL" value={content.heroImageUrl} onChange={(v) => setContent({ ...content, heroImageUrl: v })} />
+
         <Field label="Hero badge" value={content.heroBadge} onChange={(v) => setContent({ ...content, heroBadge: v })} />
         <Field label="Hero title" value={content.heroTitle} onChange={(v) => setContent({ ...content, heroTitle: v })} />
         <TextArea label="Hero desc" value={content.heroDesc} onChange={(v) => setContent({ ...content, heroDesc: v })} />
+
+        <Field label="Booking label" value={content.bookingLabel} onChange={(v) => setContent({ ...content, bookingLabel: v })} />
+        <Field label="Booking title" value={content.bookingTitle} onChange={(v) => setContent({ ...content, bookingTitle: v })} />
+
+        <Field label="Room section title" value={content.roomSectionTitle} onChange={(v) => setContent({ ...content, roomSectionTitle: v })} />
+        <Field label="Menu section title" value={content.menuSectionTitle} onChange={(v) => setContent({ ...content, menuSectionTitle: v })} />
 
         <TextArea
           label="Highlights (mỗi dòng 1 item)"
@@ -81,6 +92,7 @@ export default function AdminContentPage() {
           }
         />
 
+        <Field label="Contact section title" value={content.contactSectionTitle} onChange={(v) => setContent({ ...content, contactSectionTitle: v })} />
         <Field label="Địa chỉ" value={content.contact.address} onChange={(v) => setContent({ ...content, contact: { ...content.contact, address: v } })} />
         <Field label="Hotline" value={content.contact.hotline} onChange={(v) => setContent({ ...content, contact: { ...content.contact, hotline: v } })} />
         <Field label="Di chuyển" value={content.contact.transport} onChange={(v) => setContent({ ...content, contact: { ...content.contact, transport: v } })} />

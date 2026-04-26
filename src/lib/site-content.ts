@@ -1,10 +1,24 @@
 export type SiteContent = {
+  brandName: string;
+  brandTagline: string;
+  logoUrl: string;
+  heroImageUrl: string;
+
   heroBadge: string;
   heroTitle: string;
   heroDesc: string;
+
+  bookingLabel: string;
+  bookingTitle: string;
+
+  roomSectionTitle: string;
+  menuSectionTitle: string;
+
   highlights: string[];
   experiences: { title: string; desc: string; image: string }[];
   facts: { label: string; value: string }[];
+
+  contactSectionTitle: string;
   contact: {
     address: string;
     hotline: string;
@@ -14,10 +28,24 @@ export type SiteContent = {
 };
 
 export const defaultSiteContent: SiteContent = {
+  brandName: "Trốn Glamping",
+  brandTagline: "The Retreat Space",
+  logoUrl: "https://static.ladipage.net/59364fe77015e1b316b75df7/logo_fina-20230708040439-bm5r5.png",
+  heroImageUrl:
+    "https://w.ladicdn.com/s800x650/59364fe77015e1b316b75df7/dji_fly_20250920_173438_0008_1758365650452_photo-large-20251113062916-hhrqx.jpeg",
+
   heroBadge: "Resort-style glamping by the lake",
   heroTitle: "Nghỉ dưỡng giữa thiên nhiên, chậm lại một nhịp ở hồ Ghềnh Chè.",
   heroDesc:
     "Không gian glamping sáng, yên và riêng tư. Phù hợp cho cặp đôi, gia đình hoặc nhóm bạn muốn trốn khỏi thành phố cuối tuần.",
+
+  bookingLabel: "Reservation",
+  bookingTitle: "Đặt kỳ nghỉ của bạn",
+
+  roomSectionTitle: "Các loại lều / không gian lưu trú",
+  menuSectionTitle: "Ẩm thực",
+
+  contactSectionTitle: "Thông tin",
   highlights: [
     "Bên hồ Ghềnh Chè · cách Hà Nội chưa tới 2 giờ lái xe",
     "9 lều glamping, sức chứa từ 2 đến 10+ khách",

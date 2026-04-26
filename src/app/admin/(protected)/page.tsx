@@ -21,10 +21,11 @@ export default async function AdminHome() {
         </Link>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <Card title="Content" desc="Chỉnh hero, highlights, facts, contact" href="/admin/content" />
+      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card title="Content" desc="Chỉnh toàn bộ text và ảnh landing" href="/admin/content" />
         <Card title="Room types" desc="Chỉnh loại lều, giá base, sức chứa, ảnh, bật/tắt" href="/admin/room-types" />
-        <Card title="Leads" desc="Xem lead khách gửi form" href="/admin/leads" />
+        <Card title="Ẩm thực" desc="Đồ ăn, đồ uống, combo" href="/admin/menu" />
+        <Card title="Leads" desc="Quản lý khách hàng + thông tin đặt" href="/admin/leads" />
       </div>
     </main>
   );

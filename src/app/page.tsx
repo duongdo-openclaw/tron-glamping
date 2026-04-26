@@ -86,13 +86,13 @@ export default function Home() {
           <div>
             <div className="flex items-center gap-3">
               <img
-                src="https://static.ladipage.net/59364fe77015e1b316b75df7/logo_fina-20230708040439-bm5r5.png"
-                alt="Trốn Glamping"
+                src={content.logoUrl}
+                alt={content.brandName}
                 className="h-9 w-9 rounded-full bg-white"
               />
-              <div className="text-lg font-semibold tracking-[0.08em] text-[#4b5a44] uppercase">Trốn Glamping</div>
+              <div className="text-lg font-semibold tracking-[0.08em] text-[#4b5a44] uppercase">{content.brandName}</div>
             </div>
-            <div className="text-xs text-[#7c7469]">The Retreat Space</div>
+            <div className="text-xs text-[#7c7469]">{content.brandTagline}</div>
           </div>
           <a href="#booking" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white">Đặt chỗ</a>
         </div>
@@ -102,8 +102,8 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://w.ladicdn.com/s800x650/59364fe77015e1b316b75df7/dji_fly_20250920_173438_0008_1758365650452_photo-large-20251113062916-hhrqx.jpeg"
-              alt="Trốn Glamping bên hồ Ghềnh Chè"
+              src={content.heroImageUrl}
+              alt={content.brandName}
               className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#2f342d]/60 via-[#2f342d]/35 to-transparent" />
@@ -119,8 +119,8 @@ export default function Home() {
             </div>
 
             <div id="booking" className="w-full max-w-md justify-self-end rounded-[2rem] bg-[#fbf7f1] p-6 text-[#1f1d1a] shadow-[0_20px_80px_rgba(0,0,0,0.18)]">
-              <div className="text-xs uppercase tracking-[0.18em] text-[#8b816f]">Reservation</div>
-              <div className="mt-1 text-2xl font-medium">Đặt kỳ nghỉ của bạn</div>
+              <div className="text-xs uppercase tracking-[0.18em] text-[#8b816f]">{content.bookingLabel}</div>
+              <div className="mt-1 text-2xl font-medium">{content.bookingTitle}</div>
 
               <form className="mt-6 grid gap-4" onSubmit={(e) => { e.preventDefault(); void submitLead(e.currentTarget); }}>
                 <input name="full_name" required className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Họ và tên" />
@@ -145,7 +145,7 @@ export default function Home() {
         </section>
 
         <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-          <h2 className="text-3xl font-medium md:text-5xl">Các loại lều / không gian lưu trú</h2>
+          <h2 className="text-3xl font-medium md:text-5xl">{content.roomSectionTitle}</h2>
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
             {roomTypes.map((item) => (
               <article key={item.code} className="overflow-hidden rounded-[2rem] bg-white shadow-[0_10px_40px_rgba(62,56,47,0.08)]">
@@ -186,7 +186,7 @@ export default function Home() {
             <p className="mt-3 leading-7">{content.contact.note}</p>
           </div>
           <div>
-            <div className="font-semibold text-[#1f1d1a]">Thông tin</div>
+            <div className="font-semibold text-[#1f1d1a]">{content.contactSectionTitle}</div>
             <ul className="mt-3 space-y-2 leading-7">
               <li>Địa chỉ: {content.contact.address}</li>
               <li>Hotline: {content.contact.hotline}</li>
