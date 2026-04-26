@@ -59,10 +59,19 @@ export default async function AdminPage() {
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-4">
-          <StatCard label="Leads mới" value="12" sub="7 ngày" />
+          <StatCard label="Leads mới" value={hasSupabaseEnv ? "Live" : "12"} sub={hasSupabaseEnv ? "Đang lấy từ Supabase" : "7 ngày"} />
           <StatCard label="Booking pending" value="5" sub="Cần xác nhận" />
           <StatCard label="Đang ở" value="3" sub="Checked-in" />
           <StatCard label="Doanh thu tạm tính" value="28.500.000đ" sub="Tháng này" />
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href="/admin/leads"
+            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
+          >
+            Xem leads →
+          </Link>
         </div>
 
         <section className="mt-8 rounded-3xl border border-[#e7dece] bg-white p-5 lg:p-6">

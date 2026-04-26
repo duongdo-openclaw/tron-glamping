@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 const stayOptions = [
   {
     code: "GLAMPING DOME",
@@ -70,6 +74,46 @@ const facts = [
 ];
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function submitLead(form: HTMLFormElement) {
+    setLoading(true);
+    setDone(null);
+    setError(null);
+
+    const fd = new FormData(form);
+    const payload = {
+      full_name: String(fd.get("full_name") ?? ""),
+      phone: String(fd.get("phone") ?? ""),
+      check_in_date: fd.get("check_in_date") ? String(fd.get("check_in_date")) : null,
+      check_out_date: fd.get("check_out_date") ? String(fd.get("check_out_date")) : null,
+      requested_room_type: fd.get("requested_room_type") ? String(fd.get("requested_room_type")) : null,
+      message: fd.get("message") ? String(fd.get("message")) : null,
+    };
+
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const json = (await res.json().catch(() => null)) as any;
+      if (!res.ok || !json?.ok) {
+        throw new Error(json?.error || "Submit failed");
+      }
+
+      setDone("Đã gửi yêu cầu! Bên Trốn sẽ liên hệ sớm.");
+      form.reset();
+    } catch (e: any) {
+      setError(e?.message || "Có lỗi, thử lại giúp mình nhé.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#f8f4ee] text-[#1f1d1a]">
       <header className="sticky top-0 z-30 border-b border-[#e9e0d4] bg-[#f8f4ee]/90 backdrop-blur">
@@ -160,10 +204,18 @@ export default function Home() {
                 <div className="rounded-full bg-[#efe6d9] px-3 py-1 text-xs text-[#6a6156]">MVP</div>
               </div>
 
-              <div className="mt-6 grid gap-4">
+              <form
+                className="mt-6 grid gap-4"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void submitLead(e.currentTarget);
+                }}
+              >
                 <label className="grid gap-2">
                   <span className="text-sm text-[#6f665a]">Họ và tên</span>
                   <input
+                    name="full_name"
+                    required
                     className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none placeholder:text-[#b0a79a] focus:border-[#9fa88d]"
                     placeholder="Tên khách"
                   />
@@ -172,30 +224,72 @@ export default function Home() {
                 <label className="grid gap-2">
                   <span className="text-sm text-[#6f665a]">Số điện thoại</span>
                   <input
+                    name="phone"
+                    required
                     className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none placeholder:text-[#b0a79a] focus:border-[#9fa88d]"
                     placeholder="09xx xxx xxx"
                   />
                 </label>
 
+                <label className="grid gap-2">
+                  <span className="text-sm text-[#6f665a]">Loại lều (tuỳ chọn)</span>
+                  <select
+                    name="requested_room_type"
+                    className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]"
+                    defaultValue={""}
+                  >
+                    <option value="">Chọn loại</option>
+                    {stayOptions.map((s) => (
+                      <option key={s.code} value={s.code}>
+                        {s.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
                 <div className="grid grid-cols-2 gap-4">
                   <label className="grid gap-2">
                     <span className="text-sm text-[#6f665a]">Check-in</span>
-                    <input className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]" type="date" />
+                    <input
+                      name="check_in_date"
+                      className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]"
+                      type="date"
+                    />
                   </label>
                   <label className="grid gap-2">
                     <span className="text-sm text-[#6f665a]">Check-out</span>
-                    <input className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]" type="date" />
+                    <input
+                      name="check_out_date"
+                      className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]"
+                      type="date"
+                    />
                   </label>
                 </div>
 
-                <button className="mt-2 h-12 rounded-full bg-[#4b5a44] text-sm font-semibold text-white transition hover:bg-[#3e4c38]">
-                  Gửi yêu cầu đặt chỗ
+                <label className="grid gap-2">
+                  <span className="text-sm text-[#6f665a]">Ghi chú (tuỳ chọn)</span>
+                  <textarea
+                    name="message"
+                    rows={3}
+                    className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm outline-none placeholder:text-[#b0a79a] focus:border-[#9fa88d]"
+                    placeholder="Ví dụ: nhóm 4 người, muốn BBQ..."
+                  />
+                </label>
+
+                <button
+                  disabled={loading}
+                  className="mt-1 h-12 rounded-full bg-[#4b5a44] text-sm font-semibold text-white transition hover:bg-[#3e4c38] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading ? "Đang gửi..." : "Gửi yêu cầu đặt chỗ"}
                 </button>
 
+                {done && <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{done}</div>}
+                {error && <div className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-800">{error}</div>}
+
                 <p className="text-xs leading-6 text-[#8b816f]">
-                  Bước tiếp theo: nối booking thật với Supabase, giá theo ngày/qua đêm và tồn lều theo lịch.
+                  Lead sẽ được lưu vào Supabase bảng <code>lead_requests</code>.
                 </p>
-              </div>
+              </form>
             </div>
           </div>
         </section>

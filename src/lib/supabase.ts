@@ -5,10 +5,19 @@ const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export const hasSupabaseEnv = Boolean(url && anonKey);
 
-export function createSupabaseBrowserClient() {
-  if (!url || !anonKey) {
-    throw new Error("Missing Supabase env");
-  }
+function assertEnv() {
+  if (!url || !anonKey) throw new Error("Missing Supabase env");
+  return { url, anonKey };
+}
 
-  return createClient(url, anonKey);
+export function createSupabaseBrowserClient() {
+  const env = assertEnv();
+  return createClient(env.url, env.anonKey);
+}
+
+export function createSupabaseServerClient() {
+  const env = assertEnv();
+  return createClient(env.url, env.anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
