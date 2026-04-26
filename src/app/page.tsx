@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { defaultSiteContent, type SiteContent } from "@/lib/site-content";
 
 type RoomType = {
@@ -18,6 +18,7 @@ type MenuItem = {
   name: string;
   description: string | null;
   price: number;
+  image_url?: string | null;
 };
 
 const fallbackRoomTypes: RoomType[] = [
@@ -41,6 +42,18 @@ export default function Home() {
   const [roomTypes, setRoomTypes] = useState<RoomType[]>(fallbackRoomTypes);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [selectedMenu, setSelectedMenu] = useState<Record<string, number>>({});
+  const [menuModalOpen, setMenuModalOpen] = useState(false);
+
+  const comboItems = useMemo(() => menuItems.filter((m) => m.category === "combo"), [menuItems]);
+  const foodDrinkItems = useMemo(() => menuItems.filter((m) => m.category !== "combo"), [menuItems]);
+  const menuPreviewImage = useMemo(
+    () => comboItems.find((m) => m.image_url)?.image_url || menuItems.find((m) => m.image_url)?.image_url || "https://picsum.photos/1200/900?food",
+    [comboItems, menuItems]
+  );
+  const selectedOtherCount = useMemo(
+    () => foodDrinkItems.reduce((sum, m) => sum + (selectedMenu[m.id] || 0), 0),
+    [foodDrinkItems, selectedMenu]
+  );
 
   useEffect(() => {
     (async () => {
@@ -107,6 +120,48 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#f8f4ee] text-[#1f1d1a]">
+      {menuModalOpen && (
+        <div className="fixed inset-0 z-50">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setMenuModalOpen(false)} />
+          <div className="absolute left-1/2 top-1/2 w-[92vw] max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.6rem] bg-white shadow-[0_30px_120px_rgba(0,0,0,0.35)]">
+            <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
+              <div>
+                <div className="text-xs uppercase tracking-[0.16em] text-slate-500">Menu</div>
+                <div className="text-lg font-semibold text-slate-900">{content.menuSectionTitle}</div>
+              </div>
+              <button onClick={() => setMenuModalOpen(false)} className="rounded-full border border-slate-200 px-3 py-1.5 text-sm">Đóng</button>
+            </div>
+
+            <div className="max-h-[70vh] overflow-y-auto px-5 py-4">
+              <div className="grid gap-3">
+                {menuItems.map((m) => (
+                  <div key={m.id} className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 px-4 py-3">
+                    <div>
+                      <div className="text-sm font-semibold text-slate-900">
+                        {m.name} <span className="text-xs font-normal text-slate-500">({m.category})</span>
+                      </div>
+                      <div className="mt-1 text-xs text-slate-600">{m.description || "—"}</div>
+                      <div className="mt-2 text-xs font-semibold text-[#4b5a44]">{new Intl.NumberFormat("vi-VN").format(m.price)}đ</div>
+                    </div>
+                    <input
+                      type="number"
+                      min={0}
+                      value={selectedMenu[m.id] || 0}
+                      onChange={(e) => setSelectedMenu((prev) => ({ ...prev, [m.id]: Number(e.target.value || 0) }))}
+                      className="h-10 w-24 rounded-xl border border-slate-300 px-2 text-right"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
+              <div className="text-xs text-slate-500">Chọn số lượng, đóng popup là tự lưu vào form.</div>
+              <button onClick={() => setMenuModalOpen(false)} className="rounded-full bg-[#4b5a44] px-5 py-2 text-sm font-semibold text-white">Xong</button>
+            </div>
+          </div>
+        </div>
+      )}
       <header className="sticky top-0 z-30 border-b border-[#e9e0d4] bg-[#f8f4ee]/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
           <div className="flex items-center">
@@ -160,15 +215,24 @@ export default function Home() {
                   <input name="guest_count_adults" type="number" min={1} defaultValue={1} className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Người lớn" />
                   <input name="guest_count_children" type="number" min={0} defaultValue={0} className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Trẻ em" />
                 </div>
-                {menuItems.length > 0 && (
-                  <details className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm">
-                    <summary className="cursor-pointer font-medium text-[#4b5a44]">{content.menuSectionTitle} (đồ ăn / đồ uống / combo)</summary>
+                {comboItems.length > 0 && (
+                  <div className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-4 text-sm">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className="font-medium text-[#4b5a44]">Combo đi kèm phòng</div>
+                        <div className="mt-1 text-xs text-slate-500">Chỉ hiện combo ở bước đầu. Món lẻ xem trong menu tổng.</div>
+                      </div>
+                      <button type="button" onClick={() => setMenuModalOpen(true)} className="rounded-full border border-[#d8cfbe] px-3 py-1.5 text-xs font-semibold text-[#4b5a44]">
+                        Xem chi tiết menu
+                      </button>
+                    </div>
                     <div className="mt-3 grid gap-2">
-                      {menuItems.map((m) => (
+                      {comboItems.map((m) => (
                         <label key={m.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2">
                           <div>
-                            <div className="text-sm font-medium">{m.name} <span className="text-xs text-slate-500">({m.category})</span></div>
-                            <div className="text-xs text-slate-500">{new Intl.NumberFormat("vi-VN").format(m.price)}đ</div>
+                            <div className="text-sm font-medium">{m.name}</div>
+                            <div className="text-xs text-slate-500">{m.description || "Combo cho khách đi nghỉ dưỡng"}</div>
+                            <div className="mt-1 text-xs text-[#4b5a44]">{new Intl.NumberFormat("vi-VN").format(m.price)}đ</div>
                           </div>
                           <input
                             type="number"
@@ -180,7 +244,10 @@ export default function Home() {
                         </label>
                       ))}
                     </div>
-                  </details>
+                    {selectedOtherCount > 0 && (
+                      <div className="mt-3 text-xs text-slate-500">Đã chọn thêm {selectedOtherCount} món lẻ trong menu chi tiết.</div>
+                    )}
+                  </div>
                 )}
 
                 <textarea name="message" rows={3} className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm" placeholder="Ghi chú" />
@@ -216,17 +283,28 @@ export default function Home() {
         </section>
 
         {menuItems.length > 0 && (
-          <section className="mx-auto max-w-7xl px-5 py-4 lg:px-8 lg:py-8">
-            <h2 className="text-3xl font-medium md:text-5xl">{content.menuSectionTitle}</h2>
-            <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {menuItems.map((item) => (
-                <div key={item.id} className="rounded-3xl border border-[#e7dece] bg-white p-5">
-                  <div className="text-xs uppercase tracking-[0.14em] text-[#9b907e]">{item.category}</div>
-                  <div className="mt-1 text-lg font-semibold text-[#1f1d1a]">{item.name}</div>
-                  <div className="mt-2 text-sm text-[#6f665a]">{item.description || "—"}</div>
-                  <div className="mt-3 text-sm font-semibold text-[#4b5a44]">{new Intl.NumberFormat("vi-VN").format(item.price)}đ</div>
+          <section className="mx-auto max-w-7xl px-5 py-6 lg:px-8 lg:py-10">
+            <div className="overflow-hidden rounded-[2.2rem] border border-[#e7dece] bg-white">
+              <div className="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
+                <div className="aspect-[16/10] lg:aspect-auto">
+                  <img src={menuPreviewImage} alt={content.menuSectionTitle} className="h-full w-full object-cover" />
                 </div>
-              ))}
+                <div className="p-6 lg:p-10">
+                  <div className="text-xs uppercase tracking-[0.16em] text-[#9b907e]">Ẩm thực</div>
+                  <h2 className="mt-2 text-3xl font-medium md:text-5xl">{content.menuSectionTitle}</h2>
+                  <p className="mt-3 text-sm leading-7 text-[#6f665a]">
+                    Thực đơn gồm món lẻ và combo cho nhóm đi nghỉ dưỡng. Anh/chị có thể xem nhanh ở đây và mở popup để chọn chi tiết.
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <button type="button" onClick={() => setMenuModalOpen(true)} className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-semibold text-white">
+                      Xem chi tiết menu
+                    </button>
+                    <div className="rounded-full border border-[#d8cfbe] px-4 py-2 text-xs text-[#6f665a]">
+                      {comboItems.length} combo • {foodDrinkItems.length} món lẻ
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         )}
