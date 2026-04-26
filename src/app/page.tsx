@@ -11,14 +11,14 @@ const stayOptions = [
     meta: "2–4 khách · riêng tư · đủ tiện nghi",
     price: "Từ 1.000.000đ / đêm",
     image:
-      "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7459-20251113063635-cu_u-.jpeg",
+      "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7456-20251113063516-n0nux.jpeg",
   },
   {
     title: "Lều Royal / nhóm",
     meta: "5–14 khách · phù hợp nhóm bạn / team",
     price: "Từ 1.800.000đ / đêm",
     image:
-      "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7460-20251113063635-j4ioj.jpeg",
+      "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7458-20251113063635-the8r.jpeg",
   },
 ];
 
@@ -33,7 +33,7 @@ const experiences = [
     title: "BBQ & lửa trại",
     desc: "Ăn tối ngoài trời, ngồi cạnh bếp lửa, hợp cho cặp đôi, gia đình và nhóm bạn.",
     image:
-      "https://w.ladicdn.com/s650x600/59364fe77015e1b316b75df7/361635600_164888976609813_2633760584660443275_n-20230811170159-97nxa.jpg",
+      "https://w.ladicdn.com/uploads/images/f14f5a69-9155-4eea-a64f-eede4fd2ae75.jpg", 
   },
 ];
 
