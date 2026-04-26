@@ -1,24 +1,43 @@
 const stayOptions = [
   {
-    title: "Lều Dome",
-    meta: "2–4 khách · view hồ · điều hoà",
-    price: "Từ 2.000.000đ / đêm",
+    code: "GLAMPING DOME",
+    title: "Glamping Dome",
+    meta: "Tối đa 4 người · view hồ · tiện nghi đầy đủ",
+    price: "2.000.000đ / đêm",
     image:
       "https://w.ladicdn.com/s800x1000/59364fe77015e1b316b75df7/img_7457-20251113063529-mphok.jpeg",
   },
   {
-    title: "Lều Mông Cổ",
-    meta: "2–4 khách · riêng tư · đủ tiện nghi",
-    price: "Từ 1.000.000đ / đêm",
+    code: "GLAMPING MCN",
+    title: "Glamping Mông Cổ (MCN)",
+    meta: "Tối đa 4 người · không gian riêng tư",
+    price: "1.000.000đ / đêm",
     image:
       "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7456-20251113063516-n0nux.jpeg",
   },
   {
-    title: "Lều Royal / nhóm",
-    meta: "5–14 khách · phù hợp nhóm bạn / team",
-    price: "Từ 1.800.000đ / đêm",
+    code: "GLAMPING MCL",
+    title: "Glamping Mông Cổ (MCL)",
+    meta: "Tối đa 4 người · rộng hơn",
+    price: "1.200.000đ / đêm",
     image:
       "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7458-20251113063635-the8r.jpeg",
+  },
+  {
+    code: "GLAMPING HOME",
+    title: "Glamping Home",
+    meta: "Tối đa 3 người · phù hợp cặp đôi/gia đình nhỏ",
+    price: "1.200.000đ / đêm",
+    image:
+      "https://w.ladicdn.com/s800x950/59364fe77015e1b316b75df7/img_7461-20251113063459-ddeld.jpeg",
+  },
+  {
+    code: "THUÊ ĐỊA ĐIỂM",
+    title: "Thuê địa điểm",
+    meta: "Không gian tổ chức picnic/team building",
+    price: "Liên hệ",
+    image:
+      "https://w.ladicdn.com/s800x700/59364fe77015e1b316b75df7/img_7083-20241208050848-u58yd.jpg",
   },
 ];
 
@@ -45,7 +64,7 @@ const highlights = [
 
 const facts = [
   { label: "Check-in", value: "14:00" },
-  { label: "Check-out", value: "Trước 11:00" },
+  { label: "Check-out", value: "12:00" },
   { label: "Loại lưu trú", value: "Dome · Mông Cổ · Royal" },
   { label: "Hoạt động", value: "Sup · BBQ · Câu cá · Thuyền hồ" },
 ];
@@ -207,7 +226,7 @@ export default function Home() {
               <h2 className="mt-3 text-3xl font-medium md:text-5xl">Các loại lều / không gian lưu trú</h2>
             </div>
             <p className="max-w-xl text-sm leading-7 text-[#6f665a]">
-              Dùng ảnh thật của Trốn để lên cảm giác resort sáng, sạch, thư giãn. Nội dung giá hiện là tham chiếu ban đầu.
+              Đã đối chiếu theo trang booking hiện tại của Trốn (KiotViet): Dome, MCN, MCL, Home và Thuê địa điểm.
             </p>
           </div>
 
@@ -218,8 +237,8 @@ export default function Home() {
                   <img src={item.image} alt={item.title} className="h-full w-full object-cover transition duration-500 hover:scale-105" />
                 </div>
                 <div className="p-6">
-                  <div className="text-xs uppercase tracking-[0.16em] text-[#9a8f7f]">Accommodation</div>
-                  <h3 className="mt-2 text-2xl font-medium">{item.title}</h3>
+                  <div className="text-xs uppercase tracking-[0.16em] text-[#9a8f7f]">{item.code}</div>
+                  <h3 className="mt-2 text-xl font-medium">{item.title}</h3>
                   <p className="mt-2 text-sm leading-7 text-[#6f665a]">{item.meta}</p>
                   <div className="mt-5 flex items-center justify-between gap-4">
                     <span className="text-sm font-medium text-[#4b5a44]">{item.price}</span>
