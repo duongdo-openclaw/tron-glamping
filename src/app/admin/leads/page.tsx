@@ -1,6 +1,8 @@
 import { createSupabaseServerClient, hasSupabaseEnv } from "@/lib/supabase";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 type LeadRow = {
   id: string;
   full_name: string;
