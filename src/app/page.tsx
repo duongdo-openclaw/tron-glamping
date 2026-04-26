@@ -1,314 +1,311 @@
-const features = [
+const stayOptions = [
   {
-    title: "Pricing theo calendar",
-    desc: "Giá theo ngày/qua đêm, cuối tuần/ngày lễ, phụ thu thêm giờ rõ ràng.",
+    title: "Lều Dome",
+    meta: "2–4 khách · view hồ · điều hoà",
+    price: "Từ 2.000.000đ / đêm",
+    image:
+      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-01.jpeg",
   },
   {
-    title: "Inventory theo khu/lều",
-    desc: "Quản lý số lượng, trạng thái trống/giữ chỗ/đã book theo từng loại phòng.",
+    title: "Lều Mông Cổ",
+    meta: "2–4 khách · riêng tư · đủ tiện nghi",
+    price: "Từ 1.000.000đ / đêm",
+    image:
+      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-07.jpeg",
   },
   {
-    title: "Check-in/out chuẩn hóa",
-    desc: "Rule giờ nhận/trả, tính phí thêm giờ tự động theo cấu hình.",
+    title: "Lều Royal / nhóm",
+    meta: "5–14 khách · phù hợp nhóm bạn / team",
+    price: "Từ 1.800.000đ / đêm",
+    image:
+      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-09.jpeg",
   },
 ];
 
-const stays = [
+const experiences = [
   {
-    title: "Canopy Tent",
-    meta: "2 khách · 1 giường · 36m²",
-    desc: "Không gian riêng tư, nằm dưới tán cây. Phù hợp cặp đôi.",
+    title: "Chèo sup trên hồ",
+    desc: "Mặt hồ yên, sáng sớm và chiều muộn rất đẹp. Phù hợp khách thích trải nghiệm chill nhẹ.",
+    image:
+      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-10.jpeg",
   },
   {
-    title: "Horizon Suite",
-    meta: "2–3 khách · view núi · 40m²",
-    desc: "View rộng, chill hoàng hôn. Ưu tiên trải nghiệm premium.",
+    title: "BBQ & lửa trại",
+    desc: "Ăn tối ngoài trời, ngồi cạnh bếp lửa, hợp cho cặp đôi, gia đình và nhóm bạn.",
+    image:
+      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-08.jpeg",
   },
-  {
-    title: "Family Villa",
-    meta: "4–6 khách · 2 phòng · BBQ",
-    desc: "Đi nhóm/gia đình, có khu sinh hoạt chung và sân ngoài.",
-  },
+];
+
+const highlights = [
+  "Bên hồ Ghềnh Chè · cách Hà Nội chưa tới 2 giờ lái xe",
+  "9 lều glamping, sức chứa từ 2 đến 10+ khách",
+  "Có chèo sup, câu cá, BBQ, đốt lửa trại, check-in đồi chè",
+];
+
+const facts = [
+  { label: "Check-in", value: "14:00" },
+  { label: "Check-out", value: "Trước 11:00" },
+  { label: "Loại lưu trú", value: "Dome · Mông Cổ · Royal" },
+  { label: "Hoạt động", value: "Sup · BBQ · Câu cá · Thuyền hồ" },
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#fbfbfa] text-slate-900">
-      {/* Top bar */}
-      <header className="sticky top-0 z-20 border-b border-black/5 bg-white/70 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-400" />
-            <div className="leading-tight">
-              <div className="text-sm font-semibold tracking-tight">Trốn Glamping</div>
-              <div className="text-xs text-slate-500">Booking system (MVP)</div>
-            </div>
+    <div className="min-h-screen bg-[#f8f4ee] text-[#1f1d1a]">
+      <header className="sticky top-0 z-30 border-b border-[#e9e0d4] bg-[#f8f4ee]/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+          <div>
+            <div className="text-lg font-semibold tracking-[0.08em] text-[#4b5a44] uppercase">Trốn Glamping</div>
+            <div className="text-xs text-[#7c7469]">The Retreat Space</div>
           </div>
 
-          <nav className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
-            <a className="hover:text-slate-900" href="#stay">
-              Stay
+          <nav className="hidden items-center gap-8 text-sm text-[#6f665a] md:flex">
+            <a href="#intro" className="hover:text-[#1f1d1a]">
+              Giới thiệu
             </a>
-            <a className="hover:text-slate-900" href="#experiences">
-              Experiences
+            <a href="#stay" className="hover:text-[#1f1d1a]">
+              Lưu trú
             </a>
-            <a className="hover:text-slate-900" href="#features">
-              Hệ thống
+            <a href="#experiences" className="hover:text-[#1f1d1a]">
+              Trải nghiệm
             </a>
-            <a className="hover:text-slate-900" href="#faq">
-              FAQ
+            <a href="#contact" className="hover:text-[#1f1d1a]">
+              Liên hệ
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <a className="rounded-xl border px-4 py-2 text-sm font-medium hover:bg-slate-50" href="#admin">
-              Admin
-            </a>
-            <a
-              className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
-              href="#book"
-            >
-              Book now
-            </a>
-          </div>
+          <a
+            href="#booking"
+            className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#3e4c38]"
+          >
+            Đặt chỗ
+          </a>
         </div>
       </header>
 
       <main>
-        {/* HERO — inspired by luxury camp sites: big visual + short copy + booking box */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
-            <div className="h-full w-full bg-gradient-to-br from-emerald-900 via-slate-900 to-slate-950" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(16,185,129,.35),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(250,204,21,.18),transparent_45%),radial-gradient(circle_at_40%_90%,rgba(56,189,248,.12),transparent_40%)]" />
+            <img
+              src="https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-00-cover.jpeg"
+              alt="Trốn Glamping bên hồ Ghềnh Chè"
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#2f342d]/60 via-[#2f342d]/35 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1f1d1a]/30 via-transparent to-transparent" />
           </div>
 
-          <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-12 md:grid-cols-[1.2fr_.8fr] md:py-16">
-            <div className="space-y-6 text-white">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-white/80">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                Lấy vibe từ resort/tented camp sites · tối giản, sang, nhiều khoảng thở
+          <div className="relative mx-auto grid min-h-[86vh] max-w-7xl items-end gap-10 px-5 py-12 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:py-16">
+            <div className="max-w-3xl pb-4 text-white lg:pb-10">
+              <div className="mb-5 inline-flex rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/85">
+                Resort-style glamping by the lake
               </div>
-              <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                Glamping booking —
-                <span className="text-emerald-200"> đẹp như landing resort</span>, chạy như hệ thống.
+              <h1 className="max-w-3xl text-4xl font-medium leading-tight tracking-[0.02em] md:text-6xl">
+                Nghỉ dưỡng giữa thiên nhiên, chậm lại một nhịp ở hồ Ghềnh Chè.
               </h1>
-              <p className="max-w-xl text-base leading-relaxed text-white/75">
-                Mục tiêu: khách nhìn là muốn đặt ngay. Admin quản được giá theo ngày/qua đêm, phụ thu thêm giờ,
-                check-in/out và tồn phòng.
+              <p className="mt-5 max-w-xl text-base leading-7 text-white/85 md:text-lg">
+                Không gian glamping sáng, yên và riêng tư. Phù hợp cho cặp đôi, gia đình hoặc nhóm bạn muốn trốn khỏi
+                thành phố cuối tuần.
               </p>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <a
-                  className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-400"
-                  href="#book"
+                  href="#booking"
+                  className="rounded-full bg-[#f4eadc] px-6 py-3 text-sm font-semibold text-[#2b3128] transition hover:bg-white"
                 >
-                  Bắt đầu đặt chỗ
+                  Kiểm tra chỗ trống
                 </a>
                 <a
-                  className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
                   href="#stay"
+                  className="rounded-full border border-white/35 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
                 >
-                  Xem loại phòng
+                  Xem các loại lều
                 </a>
               </div>
-
-              <div className="grid grid-cols-3 gap-3 pt-4 text-xs text-white/80 sm:text-sm">
-                <div className="rounded-2xl border border-white/15 bg-white/5 p-4">
-                  <div className="text-white/60">Giá</div>
-                  <div className="mt-1 font-semibold">Theo ngày</div>
-                </div>
-                <div className="rounded-2xl border border-white/15 bg-white/5 p-4">
-                  <div className="text-white/60">Qua đêm</div>
-                  <div className="mt-1 font-semibold">Overnight</div>
-                </div>
-                <div className="rounded-2xl border border-white/15 bg-white/5 p-4">
-                  <div className="text-white/60">Phụ thu</div>
-                  <div className="mt-1 font-semibold">Thêm giờ</div>
-                </div>
-              </div>
             </div>
 
-            {/* Booking box */}
-            <div className="md:pt-4">
-              <div className="rounded-3xl border border-white/15 bg-white/10 p-5 text-white shadow-[0_20px_60px_rgba(0,0,0,.35)] backdrop-blur">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold">Book your stay</div>
-                  <div className="text-xs text-white/60">(demo)</div>
+            <div id="booking" className="w-full max-w-md justify-self-end rounded-[2rem] bg-[#fbf7f1] p-6 text-[#1f1d1a] shadow-[0_20px_80px_rgba(0,0,0,0.18)]">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-xs uppercase tracking-[0.18em] text-[#8b816f]">Reservation</div>
+                  <div className="mt-1 text-2xl font-medium">Đặt kỳ nghỉ của bạn</div>
+                </div>
+                <div className="rounded-full bg-[#efe6d9] px-3 py-1 text-xs text-[#6a6156]">MVP</div>
+              </div>
+
+              <div className="mt-6 grid gap-4">
+                <label className="grid gap-2">
+                  <span className="text-sm text-[#6f665a]">Họ và tên</span>
+                  <input
+                    className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none placeholder:text-[#b0a79a] focus:border-[#9fa88d]"
+                    placeholder="Tên khách"
+                  />
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-sm text-[#6f665a]">Số điện thoại</span>
+                  <input
+                    className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none placeholder:text-[#b0a79a] focus:border-[#9fa88d]"
+                    placeholder="09xx xxx xxx"
+                  />
+                </label>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <label className="grid gap-2">
+                    <span className="text-sm text-[#6f665a]">Check-in</span>
+                    <input className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]" type="date" />
+                  </label>
+                  <label className="grid gap-2">
+                    <span className="text-sm text-[#6f665a]">Check-out</span>
+                    <input className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm outline-none focus:border-[#9fa88d]" type="date" />
+                  </label>
                 </div>
 
-                <div id="book" className="mt-4 grid gap-3">
-                  <label className="grid gap-1">
-                    <span className="text-xs text-white/70">Tên khách</span>
-                    <input
-                      className="h-11 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm text-white placeholder:text-white/40 outline-none focus:border-emerald-300/60"
-                      placeholder="Nguyễn Văn A"
-                    />
-                  </label>
+                <button className="mt-2 h-12 rounded-full bg-[#4b5a44] text-sm font-semibold text-white transition hover:bg-[#3e4c38]">
+                  Gửi yêu cầu đặt chỗ
+                </button>
 
-                  <label className="grid gap-1">
-                    <span className="text-xs text-white/70">SĐT</span>
-                    <input
-                      className="h-11 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm text-white placeholder:text-white/40 outline-none focus:border-emerald-300/60"
-                      placeholder="09xx xxx xxx"
-                    />
-                  </label>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="grid gap-1">
-                      <span className="text-xs text-white/70">Check-in</span>
-                      <input
-                        className="h-11 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm text-white outline-none focus:border-emerald-300/60"
-                        type="date"
-                      />
-                    </label>
-                    <label className="grid gap-1">
-                      <span className="text-xs text-white/70">Check-out</span>
-                      <input
-                        className="h-11 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm text-white outline-none focus:border-emerald-300/60"
-                        type="date"
-                      />
-                    </label>
-                  </div>
-
-                  <button className="mt-1 h-11 rounded-2xl bg-emerald-400 text-sm font-semibold text-slate-950 hover:bg-emerald-300">
-                    Gửi yêu cầu
-                  </button>
-
-                  <div className="text-xs text-white/60">
-                    Bước tiếp theo: lưu lead/booking vào Supabase + tính giá theo calendar.
-                  </div>
-                </div>
+                <p className="text-xs leading-6 text-[#8b816f]">
+                  Bước tiếp theo: nối booking thật với Supabase, giá theo ngày/qua đêm và tồn lều theo lịch.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* STAY */}
-        <section id="stay" className="border-t border-black/5">
-          <div className="mx-auto max-w-6xl px-5 py-12">
-            <div className="flex items-end justify-between gap-6">
-              <div>
-                <div className="text-xs font-semibold text-emerald-700">STAY WITH US</div>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-                  Chọn loại phòng/lều phù hợp
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm text-slate-600">
-                  Card layout kiểu resort: tên + mô tả ngắn + CTA. Sau này nối dữ liệu Supabase để hiển thị giá theo
-                  ngày.
-                </p>
-              </div>
-              <a className="hidden text-sm font-semibold text-slate-700 hover:text-slate-900 md:block" href="#book">
-                Book now →
-              </a>
+        <section id="intro" className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <div className="text-xs uppercase tracking-[0.18em] text-[#8b816f]">A retreat close to Hanoi</div>
+              <h2 className="mt-3 text-3xl font-medium leading-tight md:text-5xl">
+                Một nơi để ở yên, ngắm hồ, uống cà phê sáng và tận hưởng không khí trong lành.
+              </h2>
             </div>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {stays.map((x) => (
-                <div key={x.title} className="group overflow-hidden rounded-3xl border bg-white">
-                  <div className="relative h-44 bg-gradient-to-br from-slate-200 via-slate-100 to-emerald-100">
-                    <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      <div className="h-full w-full bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,.25),transparent_45%),radial-gradient(circle_at_70%_70%,rgba(15,23,42,.15),transparent_50%)]" />
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <div className="text-sm font-semibold">{x.title}</div>
-                    <div className="mt-1 text-xs text-slate-500">{x.meta}</div>
-                    <div className="mt-3 text-sm text-slate-600">{x.desc}</div>
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className="text-xs text-slate-500">Giá: (coming soon)</span>
-                      <a className="text-sm font-semibold text-emerald-700 hover:text-emerald-800" href="#book">
-                        Book →
-                      </a>
-                    </div>
-                  </div>
+            <div className="space-y-4 text-[15px] leading-8 text-[#5f574d]">
+              {highlights.map((item) => (
+                <div key={item} className="flex gap-3 rounded-3xl border border-[#eadfce] bg-[#fcfaf6] px-5 py-4">
+                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#7f916e]" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* EXPERIENCES */}
-        <section id="experiences" className="border-t border-black/5 bg-white">
-          <div className="mx-auto max-w-6xl px-5 py-12">
-            <div className="grid gap-8 md:grid-cols-[.9fr_1.1fr]">
-              <div>
-                <div className="text-xs font-semibold text-emerald-700">ACTIVITIES & WELLNESS</div>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
-                  Bán trải nghiệm, không chỉ bán phòng
-                </h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  Lấy cảm hứng từ tantawan: nhiều section kể câu chuyện + list hoạt động. Phần này giúp landing trông
-                  “đắt” hơn.
-                </p>
-              </div>
+        <section id="stay" className="mx-auto max-w-7xl px-5 py-6 lg:px-8 lg:py-10">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-[0.18em] text-[#8b816f]">Stay with us</div>
+              <h2 className="mt-3 text-3xl font-medium md:text-5xl">Các loại lều / không gian lưu trú</h2>
+            </div>
+            <p className="max-w-xl text-sm leading-7 text-[#6f665a]">
+              Dùng ảnh thật của Trốn để lên cảm giác resort sáng, sạch, thư giãn. Nội dung giá hiện là tham chiếu ban đầu.
+            </p>
+          </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                {[
-                  { t: "BBQ / Campfire", d: "Đặt BBQ riêng, setup lửa trại, combo đồ ăn." },
-                  { t: "Trekking / Hiking", d: "Tour ngắn quanh khu, phù hợp khách mới." },
-                  { t: "Yoga / Wellness", d: "Buổi sáng nhẹ nhàng, tăng cảm giác retreat." },
-                  { t: "Picnic", d: "Set picnic riêng — ảnh đẹp, dễ viral." },
-                ].map((x) => (
-                  <div key={x.t} className="rounded-3xl border bg-[#fbfbfa] p-5">
-                    <div className="text-sm font-semibold">{x.t}</div>
-                    <div className="mt-1 text-sm text-slate-600">{x.d}</div>
+          <div className="mt-8 grid gap-6 lg:grid-cols-3">
+            {stayOptions.map((item) => (
+              <article key={item.title} className="overflow-hidden rounded-[2rem] bg-white shadow-[0_10px_40px_rgba(62,56,47,0.08)]">
+                <div className="aspect-[4/5] overflow-hidden">
+                  <img src={item.image} alt={item.title} className="h-full w-full object-cover transition duration-500 hover:scale-105" />
+                </div>
+                <div className="p-6">
+                  <div className="text-xs uppercase tracking-[0.16em] text-[#9a8f7f]">Accommodation</div>
+                  <h3 className="mt-2 text-2xl font-medium">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-[#6f665a]">{item.meta}</p>
+                  <div className="mt-5 flex items-center justify-between gap-4">
+                    <span className="text-sm font-medium text-[#4b5a44]">{item.price}</span>
+                    <a href="#booking" className="text-sm font-semibold text-[#4b5a44]">
+                      Đặt chỗ →
+                    </a>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
 
-        {/* SYSTEM FEATURES */}
-        <section id="features" className="border-t border-black/5 bg-slate-50">
-          <div className="mx-auto max-w-6xl px-5 py-12">
-            <div className="flex items-end justify-between gap-6">
-              <div>
-                <div className="text-xs font-semibold text-emerald-700">SYSTEM</div>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Tính năng hệ thống booking</h2>
-                <p className="mt-2 max-w-2xl text-sm text-slate-600">
-                  Đây là phần “bằng chứng” cho admin: pricing calendar, inventory, check-in/out & thêm giờ.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {features.map((x) => (
-                <div key={x.title} className="rounded-3xl border bg-white p-5">
-                  <div className="text-sm font-semibold">{x.title}</div>
-                  <div className="mt-1 text-sm text-slate-600">{x.desc}</div>
-                </div>
-              ))}
-            </div>
+        <section id="experiences" className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
+          <div className="grid gap-6 lg:grid-cols-2">
+            {experiences.map((item, idx) => (
+              <article key={item.title} className={`grid overflow-hidden rounded-[2rem] bg-white shadow-[0_10px_40px_rgba(62,56,47,0.08)] ${idx === 0 ? "lg:grid-cols-[1.1fr_0.9fr]" : "lg:grid-cols-[0.9fr_1.1fr]"}`}>
+                {idx === 0 ? (
+                  <>
+                    <img src={item.image} alt={item.title} className="h-full min-h-[320px] w-full object-cover" />
+                    <div className="flex items-center p-8 lg:p-10">
+                      <div>
+                        <div className="text-xs uppercase tracking-[0.16em] text-[#8b816f]">Experience</div>
+                        <h3 className="mt-3 text-3xl font-medium">{item.title}</h3>
+                        <p className="mt-4 text-sm leading-8 text-[#6f665a]">{item.desc}</p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center p-8 lg:p-10">
+                      <div>
+                        <div className="text-xs uppercase tracking-[0.16em] text-[#8b816f]">Evening at Trốn</div>
+                        <h3 className="mt-3 text-3xl font-medium">{item.title}</h3>
+                        <p className="mt-4 text-sm leading-8 text-[#6f665a]">{item.desc}</p>
+                      </div>
+                    </div>
+                    <img src={item.image} alt={item.title} className="h-full min-h-[320px] w-full object-cover" />
+                  </>
+                )}
+              </article>
+            ))}
           </div>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="border-t border-black/5">
-          <div className="mx-auto max-w-6xl px-5 py-12">
-            <div className="text-xs font-semibold text-emerald-700">FAQ</div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Câu hỏi nhanh</h2>
-
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="rounded-3xl border bg-white p-5">
-                <div className="text-sm font-semibold">Khi nào xong bản booking thật?</div>
-                <div className="mt-1 text-sm text-slate-600">
-                  Sau khi nối Supabase + chốt rule pricing/check-in/out, mình làm booking flow + admin.
+        <section className="mx-auto max-w-7xl px-5 pb-8 lg:px-8 lg:pb-16">
+          <div className="overflow-hidden rounded-[2.2rem] bg-[#ede3d4]">
+            <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+              <div className="p-8 lg:p-12">
+                <div className="text-xs uppercase tracking-[0.18em] text-[#8b816f]">Before you arrive</div>
+                <h2 className="mt-3 text-3xl font-medium md:text-4xl">Thông tin nhanh cho khách đặt chỗ</h2>
+                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                  {facts.map((fact) => (
+                    <div key={fact.label} className="rounded-3xl bg-[#f8f4ee] p-5">
+                      <div className="text-xs uppercase tracking-[0.14em] text-[#9b907e]">{fact.label}</div>
+                      <div className="mt-2 text-lg font-medium text-[#2f2a24]">{fact.value}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="rounded-3xl border bg-white p-5">
-                <div className="text-sm font-semibold">Có xuất hoá đơn/báo cáo không?</div>
-                <div className="mt-1 text-sm text-slate-600">MVP chưa, nhưng schema sẽ chuẩn để mở rộng.</div>
+              <div className="min-h-[340px]">
+                <img
+                  src="https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-06.jpeg"
+                  alt="Không gian Trốn Glamping"
+                  className="h-full w-full object-cover"
+                />
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-black/5 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
-          <div>© {new Date().getFullYear()} Trốn Glamping</div>
-          <div className="text-xs">Deployed on Vercel · Data: Supabase (coming soon)</div>
+      <footer id="contact" className="border-t border-[#e9e0d4] bg-[#f8f4ee]">
+        <div className="mx-auto grid max-w-7xl gap-8 px-5 py-10 text-sm text-[#6f665a] lg:grid-cols-3 lg:px-8">
+          <div>
+            <div className="text-base font-semibold text-[#1f1d1a]">Trốn Glamping</div>
+            <p className="mt-3 leading-7">Retreat bên hồ Ghềnh Chè, dành cho những ngày cần chậm lại và nghỉ đúng nghĩa.</p>
+          </div>
+          <div>
+            <div className="font-semibold text-[#1f1d1a]">Thông tin</div>
+            <ul className="mt-3 space-y-2 leading-7">
+              <li>Địa chỉ: Hồ Ghềnh Chè, Bình Sơn, Sông Công, Thái Nguyên</li>
+              <li>Hotline: 0356 910 763</li>
+              <li>Di chuyển: ô tô / xe máy / đường thuỷ</li>
+            </ul>
+          </div>
+          <div>
+            <div className="font-semibold text-[#1f1d1a]">Ghi chú</div>
+            <p className="mt-3 leading-7">
+              Giao diện đang là bản MVP theo hướng resort sáng. Bước tiếp theo có thể nối form thật với Supabase để nhận
+              booking.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
