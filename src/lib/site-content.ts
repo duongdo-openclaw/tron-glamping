@@ -16,6 +16,8 @@ export type SiteContent = {
 
   highlights: string[];
   experiences: { title: string; desc: string; image: string }[];
+  experiencesSectionTitle: string;
+  experiencesSectionDesc: string;
   facts: { label: string; value: string }[];
 
   contactSectionTitle: string;
@@ -46,6 +48,9 @@ export const defaultSiteContent: SiteContent = {
   menuSectionTitle: "Ẩm thực",
 
   contactSectionTitle: "Thông tin",
+  experiencesSectionTitle: "Trải nghiệm",
+  experiencesSectionDesc: "Những khoảnh khắc nhỏ để thấy mình đang nghỉ đúng nghĩa.",
+
   highlights: [
     "Bên hồ Ghềnh Chè · cách Hà Nội chưa tới 2 giờ lái xe",
     "9 lều glamping, sức chứa từ 2 đến 10+ khách",

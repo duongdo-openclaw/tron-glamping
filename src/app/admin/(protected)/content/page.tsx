@@ -92,6 +92,26 @@ export default function AdminContentPage() {
           }
         />
 
+        <Field label="Experiences section title" value={content.experiencesSectionTitle} onChange={(v) => setContent({ ...content, experiencesSectionTitle: v })} />
+        <TextArea label="Experiences section desc" value={content.experiencesSectionDesc} onChange={(v) => setContent({ ...content, experiencesSectionDesc: v })} />
+        <TextArea
+          label="Experiences (format: title|desc|imageUrl, mỗi dòng 1 item)"
+          value={content.experiences.map((e) => `${e.title}|${e.desc}|${e.image}`).join("\n")}
+          onChange={(v) =>
+            setContent({
+              ...content,
+              experiences: v
+                .split("\n")
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line) => {
+                  const [title, desc, image] = line.split("|");
+                  return { title: (title || "").trim(), desc: (desc || "").trim(), image: (image || "").trim() };
+                }),
+            })
+          }
+        />
+
         <Field label="Contact section title" value={content.contactSectionTitle} onChange={(v) => setContent({ ...content, contactSectionTitle: v })} />
         <Field label="Địa chỉ" value={content.contact.address} onChange={(v) => setContent({ ...content, contact: { ...content.contact, address: v } })} />
         <Field label="Hotline" value={content.contact.hotline} onChange={(v) => setContent({ ...content, contact: { ...content.contact, hotline: v } })} />

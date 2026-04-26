@@ -235,6 +235,24 @@ export default function Home() {
           </section>
         )}
 
+        <section className="mx-auto max-w-7xl px-5 py-6 lg:px-8 lg:py-10">
+          <h2 className="text-3xl font-medium md:text-5xl">{content.experiencesSectionTitle}</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-[#6f665a]">{content.experiencesSectionDesc}</p>
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            {content.experiences.map((exp) => (
+              <article key={exp.title} className="overflow-hidden rounded-[2rem] bg-white shadow-[0_10px_40px_rgba(62,56,47,0.08)]">
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img src={exp.image || "https://picsum.photos/1200/675"} alt={exp.title} className="h-full w-full object-cover" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-medium">{exp.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-[#6f665a]">{exp.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="mx-auto max-w-7xl px-5 pb-8 lg:px-8 lg:pb-16">
           <div className="overflow-hidden rounded-[2.2rem] bg-[#ede3d4] p-8 lg:p-12">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
