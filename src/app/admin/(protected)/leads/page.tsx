@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { createSupabaseAdminClient } from "@/lib/supabase-admin";
+"use client";
 
-export const dynamic = "force-dynamic";
+import { useEffect, useMemo, useState } from "react";
 
 type LeadRow = {
   id: string;
@@ -19,110 +18,198 @@ type LeadRow = {
   created_at: string;
 };
 
-async function getLeads(): Promise<LeadRow[]> {
-  const supabase = createSupabaseAdminClient();
-  const { data, error } = await supabase
-    .from("lead_requests")
-    .select(
-      "id,full_name,phone,email,guest_count_adults,guest_count_children,requested_room_type,check_in_date,check_out_date,selected_menu_items,customer_status,message,created_at"
-    )
-    .order("created_at", { ascending: false })
-    .limit(50);
+const statusOptions = ["new", "contacted", "quoted", "confirmed", "cancelled"];
 
-  if (error || !data) return [];
-  return data as LeadRow[];
-}
+export default function AdminLeadsPage() {
+  const [rows, setRows] = useState<LeadRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-export default async function AdminLeadsPage() {
-  const leads = await getLeads();
+  async function load() {
+    setLoading(true);
+    const res = await fetch("/api/admin/leads", { cache: "no-store" });
+    const json = await res.json().catch(() => null);
+    if (res.ok && json?.ok && Array.isArray(json.leads)) {
+      setRows(json.leads as LeadRow[]);
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  async function saveStatus(id: string, customer_status: string) {
+    setMsg(null);
+    const res = await fetch("/api/admin/leads", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, customer_status }),
+    });
+    const json = await res.json().catch(() => null);
+    if (!res.ok || !json?.ok) {
+      setMsg(json?.error || "Cập nhật thất bại");
+      return;
+    }
+    setMsg("Đã cập nhật lead");
+  }
+
+  const filtered = useMemo(() => {
+    return rows.filter((r) => {
+      if (statusFilter !== "all" && (r.customer_status || "new") !== statusFilter) return false;
+      if (!q.trim()) return true;
+      const t = `${r.full_name} ${r.phone} ${r.email || ""}`.toLowerCase();
+      return t.includes(q.trim().toLowerCase());
+    });
+  }, [rows, q, statusFilter]);
+
+  const summary = useMemo(() => {
+    const total = rows.length;
+    const by = (s: string) => rows.filter((r) => (r.customer_status || "new") === s).length;
+    return {
+      total,
+      new: by("new"),
+      contacted: by("contacted"),
+      quoted: by("quoted"),
+      confirmed: by("confirmed"),
+    };
+  }, [rows]);
 
   return (
-    <main className="min-h-screen bg-[#f5f1ea] text-slate-900">
-      <div className="mx-auto max-w-7xl px-5 py-8 lg:px-8 lg:py-10">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-xs uppercase tracking-[0.16em] text-slate-500">Trốn Glamping</div>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight">Leads</h1>
-          </div>
-          <div className="flex gap-2">
-            <Link
-              href="/admin"
-              className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
-            >
-              ← Dashboard
-            </Link>
-            <Link
-              href="/"
-              className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50"
-            >
-              ← Landing
-            </Link>
+    <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Quản lý khách hàng / Leads</h1>
+          <div className="text-sm text-slate-500">Theo dõi thông tin cá nhân + phòng + ẩm thực đã chọn</div>
+        </div>
+        <button onClick={() => void load()} className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50">Làm mới</button>
+      </div>
+
+      {msg && <div className="mt-4 rounded-xl bg-slate-100 px-4 py-3 text-sm">{msg}</div>}
+
+      <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <Stat label="Tổng" value={summary.total} />
+        <Stat label="Mới" value={summary.new} />
+        <Stat label="Đã liên hệ" value={summary.contacted} />
+        <Stat label="Đã báo giá" value={summary.quoted} />
+        <Stat label="Đã chốt" value={summary.confirmed} />
+      </section>
+
+      <section className="mt-6 rounded-3xl border border-[#e7dece] bg-white p-4">
+        <div className="grid gap-3 md:grid-cols-3">
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Tìm theo tên / số điện thoại / email"
+            className="h-11 rounded-2xl border border-slate-300 px-4 text-sm"
+          />
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="h-11 rounded-2xl border border-slate-300 px-4 text-sm">
+            <option value="all">Tất cả trạng thái</option>
+            {statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <div className="h-11 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm leading-[42px] text-slate-600">
+            Hiển thị: <b>{filtered.length}</b> lead
           </div>
         </div>
+      </section>
 
-
-        <section className="mt-6 overflow-hidden rounded-3xl border border-[#e7dece] bg-white">
-          <div className="border-b border-slate-100 px-5 py-4">
-            <div className="text-sm text-slate-600">Mới nhất (tối đa 50)</div>
-          </div>
-
+      <section className="mt-6 overflow-hidden rounded-3xl border border-[#e7dece] bg-white">
+        {loading ? (
+          <div className="p-6 text-sm text-slate-600">Đang tải dữ liệu...</div>
+        ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
               <thead className="bg-[#faf7f2] text-slate-600">
                 <tr>
                   <th className="px-4 py-3 font-medium">Thời gian</th>
-                  <th className="px-4 py-3 font-medium">Tên</th>
-                  <th className="px-4 py-3 font-medium">SĐT / Email</th>
-                  <th className="px-4 py-3 font-medium">Khách</th>
-                  <th className="px-4 py-3 font-medium">Loại</th>
-                  <th className="px-4 py-3 font-medium">Check-in</th>
-                  <th className="px-4 py-3 font-medium">Check-out</th>
+                  <th className="px-4 py-3 font-medium">Khách hàng</th>
+                  <th className="px-4 py-3 font-medium">Lưu trú</th>
                   <th className="px-4 py-3 font-medium">Ẩm thực</th>
                   <th className="px-4 py-3 font-medium">Trạng thái</th>
                   <th className="px-4 py-3 font-medium">Ghi chú</th>
                 </tr>
               </thead>
               <tbody>
-                {leads.length === 0 ? (
+                {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="px-4 py-6 text-slate-500">
-                      Chưa có lead.
-                    </td>
+                    <td colSpan={6} className="px-4 py-6 text-slate-500">Chưa có dữ liệu phù hợp.</td>
                   </tr>
                 ) : (
-                  leads.map((l) => (
-                    <tr key={l.id} className="border-t border-slate-100">
-                      <td className="px-4 py-3 whitespace-nowrap text-slate-600">
-                        {new Date(l.created_at).toLocaleString("vi-VN")}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-slate-800">{l.full_name}</td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div>{l.phone}</div>
-                        <div className="text-xs text-slate-500">{l.email ?? "—"}</div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">{l.guest_count_adults ?? 1} NL / {l.guest_count_children ?? 0} TE</td>
-                      <td className="px-4 py-3 whitespace-nowrap">{l.requested_room_type ?? "—"}</td>
-                      <td className="px-4 py-3 whitespace-nowrap">{l.check_in_date ?? "—"}</td>
-                      <td className="px-4 py-3 whitespace-nowrap">{l.check_out_date ?? "—"}</td>
-                      <td className="px-4 py-3 min-w-[220px] text-xs text-slate-700">
-                        {Array.isArray(l.selected_menu_items) && l.selected_menu_items.length > 0
-                          ? l.selected_menu_items.map((x, i) => (
-                              <div key={i}>{x.name} ×{x.qty}</div>
-                            ))
-                          : "—"}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">{l.customer_status ?? "new"}</td>
-                      <td className="px-4 py-3 max-w-[360px] truncate" title={l.message ?? ""}>
-                        {l.message ?? "—"}
-                      </td>
-                    </tr>
-                  ))
+                  filtered.map((l, idx) => {
+                    const totalFood = Array.isArray(l.selected_menu_items)
+                      ? l.selected_menu_items.reduce((sum, x) => sum + (x.price || 0) * (x.qty || 0), 0)
+                      : 0;
+                    const status = l.customer_status || "new";
+                    return (
+                      <tr key={l.id} className="border-t border-slate-100 align-top">
+                        <td className="px-4 py-3 whitespace-nowrap text-slate-600">{new Date(l.created_at).toLocaleString("vi-VN")}</td>
+                        <td className="px-4 py-3 min-w-[220px]">
+                          <div className="font-semibold text-slate-800">{l.full_name}</div>
+                          <div className="text-xs text-slate-600">{l.phone}</div>
+                          <div className="text-xs text-slate-500">{l.email || "—"}</div>
+                        </td>
+                        <td className="px-4 py-3 min-w-[220px] text-xs text-slate-700">
+                          <div>Loại phòng: <b>{l.requested_room_type || "—"}</b></div>
+                          <div>Check-in: {l.check_in_date || "—"}</div>
+                          <div>Check-out: {l.check_out_date || "—"}</div>
+                          <div>Khách: {l.guest_count_adults ?? 1} NL / {l.guest_count_children ?? 0} TE</div>
+                        </td>
+                        <td className="px-4 py-3 min-w-[260px] text-xs text-slate-700">
+                          {Array.isArray(l.selected_menu_items) && l.selected_menu_items.length > 0 ? (
+                            <>
+                              <div className="space-y-1">
+                                {l.selected_menu_items.map((x, i) => (
+                                  <div key={i}>{x.name} ({x.category}) ×{x.qty}</div>
+                                ))}
+                              </div>
+                              <div className="mt-2 font-semibold text-[#4b5a44]">Tổng món: {new Intl.NumberFormat("vi-VN").format(totalFood)}đ</div>
+                            </>
+                          ) : (
+                            "—"
+                          )}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <select
+                            value={status}
+                            onChange={(e) => setRows((prev) => patchLead(prev, idx, { customer_status: e.target.value }))}
+                            className="h-10 rounded-xl border border-slate-300 px-3 text-sm"
+                          >
+                            {statusOptions.map((s) => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                          <button
+                            onClick={() => void saveStatus(l.id, (rows[idx]?.customer_status || "new") as string)}
+                            className="mt-2 block rounded-full bg-[#4b5a44] px-3 py-1 text-xs font-semibold text-white"
+                          >
+                            Lưu trạng thái
+                          </button>
+                        </td>
+                        <td className="px-4 py-3 max-w-[320px] text-xs text-slate-700">{l.message || "—"}</td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
           </div>
-        </section>
-      </div>
+        )}
+      </section>
     </main>
+  );
+}
+
+function patchLead(rows: LeadRow[], idx: number, patch: Partial<LeadRow>) {
+  const clone = [...rows];
+  clone[idx] = { ...clone[idx], ...patch };
+  return clone;
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-2xl border border-[#e7dece] bg-white px-4 py-4">
+      <div className="text-xs uppercase tracking-[0.14em] text-slate-500">{label}</div>
+      <div className="mt-1 text-2xl font-semibold text-slate-900">{value}</div>
+    </div>
   );
 }
