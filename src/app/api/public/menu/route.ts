@@ -6,7 +6,7 @@ export async function GET() {
     const supabase = createSupabaseAdminClient();
     const { data, error } = await supabase
       .from("menu_items")
-      .select("id,category,name,description,price,image_url,is_active,sort_order")
+      .select("id,category,name,description,price,image_url,serving_period,is_active,sort_order")
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
 

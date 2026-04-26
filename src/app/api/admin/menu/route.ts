@@ -8,7 +8,7 @@ export async function GET() {
 
   const { data, error } = await supabase
     .from("menu_items")
-    .select("id,category,name,description,price,image_url,is_active,sort_order")
+    .select("id,category,name,description,price,image_url,serving_period,is_active,sort_order")
     .order("sort_order", { ascending: true });
 
   if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
@@ -30,6 +30,7 @@ export async function POST(req: Request) {
     price: Number(body.price ?? 0),
     image_url: body.image_url ?? null,
     is_active: body.is_active ?? true,
+    serving_period: body.serving_period ?? "main",
     sort_order: Number(body.sort_order ?? 0),
   });
 

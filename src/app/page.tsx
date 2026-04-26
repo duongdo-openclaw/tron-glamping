@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { defaultSiteContent, type SiteContent } from "@/lib/site-content";
 
 type RoomType = {
@@ -15,6 +15,7 @@ type RoomType = {
 type MenuItem = {
   id: string;
   category: "food" | "drink" | "combo";
+  serving_period?: "breakfast" | "main";
   name: string;
   description: string | null;
   price: number;
@@ -32,6 +33,85 @@ const fallbackRoomTypes: RoomType[] = [
       "https://w.ladicdn.com/s800x1000/59364fe77015e1b316b75df7/img_7457-20251113063529-mphok.jpeg",
   },
 ];
+
+function Section({
+  title,
+  items,
+  selected,
+  setSelected,
+}: {
+  title: string;
+  items: any[];
+  selected: Record<string, number>;
+  setSelected: Dispatch<SetStateAction<Record<string, number>>>;
+}) {
+  if (!items.length) return null;
+
+  const breakfast = items.filter((m) => (m.serving_period || "main") === "breakfast");
+  const main = items.filter((m) => (m.serving_period || "main") !== "breakfast");
+
+  return (
+    <div>
+      <div className="text-sm font-semibold text-slate-900">{title}</div>
+
+      {breakfast.length > 0 && (
+        <div className="mt-3">
+          <div className="text-xs uppercase tracking-[0.14em] text-slate-500">Bữa sáng</div>
+          <div className="mt-2 grid gap-3">
+            {breakfast.map((m) => (
+              <MenuRow key={m.id} item={m} selected={selected} setSelected={setSelected} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {main.length > 0 && (
+        <div className="mt-4">
+          <div className="text-xs uppercase tracking-[0.14em] text-slate-500">Bữa chính</div>
+          <div className="mt-2 grid gap-3">
+            {main.map((m) => (
+              <MenuRow key={m.id} item={m} selected={selected} setSelected={setSelected} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MenuRow({
+  item,
+  selected,
+  setSelected,
+}: {
+  item: any;
+  selected: Record<string, number>;
+  setSelected: Dispatch<SetStateAction<Record<string, number>>>;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 px-4 py-3">
+      <div className="flex gap-3">
+        {item.image_url ? (
+          <img src={item.image_url} alt={item.name} className="h-16 w-16 rounded-xl object-cover" />
+        ) : (
+          <div className="h-16 w-16 rounded-xl bg-slate-100" />
+        )}
+        <div>
+          <div className="text-sm font-semibold text-slate-900">{item.name}</div>
+          <div className="mt-1 text-xs text-slate-600">{item.description || "—"}</div>
+          <div className="mt-2 text-xs font-semibold text-[#4b5a44]">{new Intl.NumberFormat("vi-VN").format(item.price)}đ</div>
+        </div>
+      </div>
+      <input
+        type="number"
+        min={0}
+        value={selected[item.id] || 0}
+        onChange={(e) => setSelected((prev) => ({ ...prev, [item.id]: Number(e.target.value || 0) }))}
+        className="h-10 w-24 rounded-xl border border-slate-300 px-2 text-right"
+      />
+    </div>
+  );
+}
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -133,26 +213,26 @@ export default function Home() {
             </div>
 
             <div className="max-h-[70vh] overflow-y-auto px-5 py-4">
-              <div className="grid gap-3">
-                {menuItems.map((m) => (
-                  <div key={m.id} className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 px-4 py-3">
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900">
-                        {m.name} <span className="text-xs font-normal text-slate-500">({m.category})</span>
-                      </div>
-                      <div className="mt-1 text-xs text-slate-600">{m.description || "—"}</div>
-                      <div className="mt-2 text-xs font-semibold text-[#4b5a44]">{new Intl.NumberFormat("vi-VN").format(m.price)}đ</div>
-                    </div>
-                    <input
-                      type="number"
-                      min={0}
-                      value={selectedMenu[m.id] || 0}
-                      onChange={(e) => setSelectedMenu((prev) => ({ ...prev, [m.id]: Number(e.target.value || 0) }))}
-                      className="h-10 w-24 rounded-xl border border-slate-300 px-2 text-right"
-                    />
-                  </div>
-                ))}
-              </div>
+              <Section
+                title="Menu đồ ăn"
+                items={menuItems.filter((m: any) => m.category === "food")}
+                selected={selectedMenu}
+                setSelected={setSelectedMenu}
+              />
+              <div className="h-6" />
+              <Section
+                title="Menu đồ uống"
+                items={menuItems.filter((m: any) => m.category === "drink")}
+                selected={selectedMenu}
+                setSelected={setSelectedMenu}
+              />
+              <div className="h-6" />
+              <Section
+                title="Combo"
+                items={menuItems.filter((m: any) => m.category === "combo")}
+                selected={selectedMenu}
+                setSelected={setSelectedMenu}
+              />
             </div>
 
             <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
@@ -168,7 +248,7 @@ export default function Home() {
             <img
               src={content.logoUrl}
               alt={content.brandName}
-              className="h-9 w-auto bg-transparent"
+              className="h-14 w-auto bg-transparent"
             />
           </div>
           <a href="#booking" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white">Đặt chỗ</a>
@@ -216,12 +296,10 @@ export default function Home() {
                   <input name="guest_count_children" type="number" min={0} defaultValue={0} className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Trẻ em" />
                 </div>
                 {comboItems.length > 0 && (
-                  <div className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-4 text-sm">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <div className="font-medium text-[#4b5a44]">Combo đi kèm phòng</div>
-                        <div className="mt-1 text-xs text-slate-500">Chỉ hiện combo ở bước đầu. Món lẻ xem trong menu tổng.</div>
-                      </div>
+                  <details className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm">
+                    <summary className="cursor-pointer font-medium text-[#4b5a44]">Combo (option)</summary>
+                    <div className="mt-2 flex items-center justify-between gap-3">
+                      <div className="text-xs text-slate-500">Gợi ý combo đi kèm. Món lẻ xem trong menu tổng.</div>
                       <button type="button" onClick={() => setMenuModalOpen(true)} className="rounded-full border border-[#d8cfbe] px-3 py-1.5 text-xs font-semibold text-[#4b5a44]">
                         Xem chi tiết menu
                       </button>
@@ -239,7 +317,7 @@ export default function Home() {
                             min={0}
                             value={selectedMenu[m.id] || 0}
                             onChange={(e) => setSelectedMenu((prev) => ({ ...prev, [m.id]: Number(e.target.value || 0) }))}
-                            className="h-9 w-20 rounded-xl border border-slate-300 px-2 text-right"
+                            className="h-8 w-16 rounded-xl border border-slate-300 px-2 text-right"
                           />
                         </label>
                       ))}
@@ -247,7 +325,7 @@ export default function Home() {
                     {selectedOtherCount > 0 && (
                       <div className="mt-3 text-xs text-slate-500">Đã chọn thêm {selectedOtherCount} món lẻ trong menu chi tiết.</div>
                     )}
-                  </div>
+                  </details>
                 )}
 
                 <textarea name="message" rows={3} className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm" placeholder="Ghi chú" />

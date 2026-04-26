@@ -9,6 +9,7 @@ type MenuItem = {
   description: string | null;
   price: number;
   image_url: string | null;
+  serving_period: "breakfast" | "main";
   sort_order: number;
   is_active: boolean;
 };
@@ -61,6 +62,17 @@ export default function AdminMenuPage() {
               <Field label="Tên" value={item.name} onChange={(v) => setItems((p) => patch(p, idx, { name: v }))} />
               <Field label="Giá" value={String(item.price)} onChange={(v) => setItems((p) => patch(p, idx, { price: Number(v || 0) }))} />
               <Field label="Sort" value={String(item.sort_order)} onChange={(v) => setItems((p) => patch(p, idx, { sort_order: Number(v || 0) }))} />
+              <label className="grid gap-2">
+                <span className="text-sm text-slate-600">Bữa</span>
+                <select
+                  value={item.serving_period || "main"}
+                  onChange={(e) => setItems((p) => patch(p, idx, { serving_period: e.target.value as any }))}
+                  className="h-11 rounded-2xl border border-slate-300 px-4 text-sm"
+                >
+                  <option value="breakfast">Bữa sáng</option>
+                  <option value="main">Bữa chính</option>
+                </select>
+              </label>
               <label className="flex items-center gap-2 text-sm text-slate-700">
                 <input type="checkbox" checked={item.is_active} onChange={(e) => setItems((p) => patch(p, idx, { is_active: e.target.checked }))} /> Active
               </label>
