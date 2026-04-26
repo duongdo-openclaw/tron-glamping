@@ -356,6 +356,15 @@ export default function Home() {
                   <div className="text-xs uppercase tracking-[0.16em] text-[#9a8f7f]">{item.code}</div>
                   <h3 className="mt-2 text-xl font-medium">{item.name}</h3>
                   <p className="mt-2 text-sm leading-7 text-[#6f665a]">{item.description || `${item.capacity_adults} khách`}</p>
+
+                  {Array.isArray(item.gallery_images) && item.gallery_images.length > 1 && (
+                    <div className="mt-3 grid grid-cols-3 gap-2">
+                      {item.gallery_images.slice(0, 3).map((g, i) => (
+                        <img key={i} src={g} alt={`${item.name}-${i + 1}`} className="h-16 w-full rounded-xl object-cover" />
+                      ))}
+                    </div>
+                  )}
+
                   <div className="mt-5 text-sm font-medium text-[#4b5a44]">
                     {item.base_price > 0 ? `${new Intl.NumberFormat("vi-VN").format(item.base_price)}đ / đêm` : "Liên hệ"}
                   </div>

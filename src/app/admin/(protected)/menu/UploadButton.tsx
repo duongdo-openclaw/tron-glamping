@@ -21,7 +21,6 @@ export function UploadButton({
   async function compressToWebp(file: File): Promise<File> {
     const tooBig = file.size > MAX_ORIGINAL_MB * 1024 * 1024;
     if (tooBig) throw new Error(`Ảnh gốc quá lớn (>${MAX_ORIGINAL_MB}MB)`);
-
     if (!file.type.startsWith("image/")) return file;
 
     const dataUrl = await fileToDataUrl(file);
@@ -36,7 +35,6 @@ export function UploadButton({
     canvas.height = height;
     const ctx = canvas.getContext("2d");
     if (!ctx) return file;
-
     ctx.drawImage(img, 0, 0, width, height);
 
     const blob: Blob = await new Promise((resolve, reject) => {

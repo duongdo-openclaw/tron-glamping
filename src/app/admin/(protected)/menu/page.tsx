@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UploadButton } from "./UploadButton";
 
 type MenuItem = {
   id: string;
@@ -83,7 +84,10 @@ export default function AdminMenuPage() {
               <textarea rows={2} value={item.description || ""} onChange={(e) => setItems((p) => patch(p, idx, { description: e.target.value }))} className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" />
             </label>
 
-            <Field label="Ảnh" value={item.image_url || ""} onChange={(v) => setItems((p) => patch(p, idx, { image_url: v }))} />
+            <div className="mt-3 flex items-center justify-between gap-3">
+              <Field label="Ảnh" value={item.image_url || ""} onChange={(v) => setItems((p) => patch(p, idx, { image_url: v }))} />
+              <UploadButton label="Upload ảnh" folder={`menu/${item.category}`} onUploaded={(url) => setItems((p) => patch(p, idx, { image_url: url }))} />
+            </div>
           </div>
         ))}
       </div>

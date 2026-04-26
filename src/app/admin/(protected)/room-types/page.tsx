@@ -24,9 +24,12 @@ export default function AdminRoomTypesPage() {
 
   async function load() {
     setLoading(true);
+    const t0 = Date.now();
     const res = await fetch("/api/admin/room-types", { cache: "no-store" });
     const json = await res.json().catch(() => null);
     if (res.ok && json?.ok) setRows(json.room_types || []);
+    const took = Date.now() - t0;
+    if (took > 1200) setMsg(`Load phòng hơi chậm (${took}ms). Em sẽ tối ưu thêm phase hardening.`);
     setLoading(false);
   }
 

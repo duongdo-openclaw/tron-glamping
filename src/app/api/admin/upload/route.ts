@@ -29,6 +29,10 @@ export async function POST(req: Request) {
     // continue; bucket may still be usable
   }
 
+  if (file.size > 6 * 1024 * 1024) {
+    return NextResponse.json({ ok: false, error: "Ảnh sau nén vượt quá 6MB" }, { status: 400 });
+  }
+
   const ext = (file.name.split(".").pop() || "bin").toLowerCase();
   const base = safeName((file.name || "file").replace(/\.[^.]+$/, "")) || "file";
   const filename = `${Date.now()}-${Math.random().toString(16).slice(2)}-${base}.${ext}`;
