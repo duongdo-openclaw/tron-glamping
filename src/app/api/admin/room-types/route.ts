@@ -7,7 +7,7 @@ export async function GET() {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("room_types")
-    .select("id,code,name,description,capacity_adults,capacity_children,base_price,hero_image_url,sort_order,is_active")
+    .select("id,code,name,description,capacity_adults,capacity_children,base_price,hero_image_url,gallery_images,sort_order,is_active")
     .order("sort_order", { ascending: true });
 
   if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });

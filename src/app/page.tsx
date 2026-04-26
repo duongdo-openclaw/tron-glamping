@@ -10,6 +10,7 @@ type RoomType = {
   capacity_adults: number;
   base_price: number;
   hero_image_url: string | null;
+  gallery_images?: string[];
 };
 
 type MenuItem = {
@@ -345,7 +346,11 @@ export default function Home() {
             {roomTypes.map((item) => (
               <article key={item.code} className="overflow-hidden rounded-[2rem] bg-white shadow-[0_10px_40px_rgba(62,56,47,0.08)]">
                 <div className="aspect-[4/5] overflow-hidden">
-                  <img src={item.hero_image_url || "https://picsum.photos/600/800"} alt={item.name} className="h-full w-full object-cover" />
+                  <img
+                    src={item.gallery_images?.[0] || item.hero_image_url || "https://picsum.photos/600/800"}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <div className="p-6">
                   <div className="text-xs uppercase tracking-[0.16em] text-[#9a8f7f]">{item.code}</div>

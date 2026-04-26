@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UploadButton } from "./UploadButton";
 
 type RoomType = {
   id: string;
@@ -11,6 +12,7 @@ type RoomType = {
   capacity_children: number;
   base_price: number;
   hero_image_url: string | null;
+  gallery_images?: string[];
   sort_order: number;
   is_active: boolean;
 };
@@ -106,11 +108,66 @@ export default function AdminRoomTypesPage() {
               />
             </label>
 
-            <Field
-              label="Ảnh"
-              value={row.hero_image_url || ""}
-              onChange={(v) => setRows((prev) => patch(prev, idx, { hero_image_url: v }))}
-            />
+            <div className="mt-3 grid gap-3 rounded-2xl border border-slate-200 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-sm font-semibold text-slate-800">Ảnh đại diện</div>
+                  <div className="text-xs text-slate-500">Có thể nhập link hoặc upload trực tiếp</div>
+                </div>
+                <UploadButton label="Upload ảnh đại diện" folder={`room-types/${row.code.toLowerCase()}`} onUploaded={(url) => setRows((prev) => patch(prev, idx, { hero_image_url: url }))} />
+              </div>
+              <Field
+                label="Ảnh đại diện"
+                value={row.hero_image_url || ""}
+                onChange={(v) => setRows((prev) => patch(prev, idx, { hero_image_url: v }))}
+              />
+            </div>
+
+            <div className="mt-3 grid gap-3 rounded-2xl border border-slate-200 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="text-sm font-semibold text-slate-800">Gallery (tối đa 3 ảnh)</div>
+                  <div className="text-xs text-slate-500">Mỗi lều nên có 3 ảnh</div>
+                </div>
+                <UploadButton
+                  label="Upload ảnh gallery"
+                  folder={`room-types/${row.code.toLowerCase()}`}
+                  onUploaded={(url) => {
+                    const current = Array.isArray(row.gallery_images) ? row.gallery_images : [];
+                    if (current.length >= 3) return;
+                    setRows((prev) => patch(prev, idx, { gallery_images: [...current, url] }));
+                  }}
+                />
+              </div>
+              {[0, 1, 2].map((imageIdx) => (
+                <div key={imageIdx} className="flex items-center gap-2">
+                  <div className="min-w-14 text-xs text-slate-500">Ảnh {imageIdx + 1}</div>
+                  <input
+                    value={row.gallery_images?.[imageIdx] || ""}
+                    onChange={(e) => {
+                      const next = [...(row.gallery_images || [])];
+                      next[imageIdx] = e.target.value;
+                      setRows((prev) => patch(prev, idx, { gallery_images: next.filter((x) => x !== undefined) }));
+                    }}
+                    className="h-11 flex-1 rounded-2xl border border-slate-300 px-4 text-sm"
+                    placeholder={`URL ảnh ${imageIdx + 1}`}
+                  />
+                  {row.gallery_images?.[imageIdx] ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const next = [...(row.gallery_images || [])];
+                        next.splice(imageIdx, 1);
+                        setRows((prev) => patch(prev, idx, { gallery_images: next }));
+                      }}
+                      className="rounded-full border border-rose-200 px-3 py-1.5 text-xs text-rose-600"
+                    >
+                      Xoá
+                    </button>
+                  ) : null}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
