@@ -4,21 +4,21 @@ const stayOptions = [
     meta: "2–4 khách · view hồ · điều hoà",
     price: "Từ 2.000.000đ / đêm",
     image:
-      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-01.jpeg",
+      "https://w.ladicdn.com/s800x1000/59364fe77015e1b316b75df7/img_7457-20251113063529-mphok.jpeg",
   },
   {
     title: "Lều Mông Cổ",
     meta: "2–4 khách · riêng tư · đủ tiện nghi",
     price: "Từ 1.000.000đ / đêm",
     image:
-      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-07.jpeg",
+      "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7459-20251113063635-cu_u-.jpeg",
   },
   {
     title: "Lều Royal / nhóm",
     meta: "5–14 khách · phù hợp nhóm bạn / team",
     price: "Từ 1.800.000đ / đêm",
     image:
-      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-09.jpeg",
+      "https://w.ladicdn.com/s700x850/59364fe77015e1b316b75df7/img_7460-20251113063635-j4ioj.jpeg",
   },
 ];
 
@@ -27,13 +27,13 @@ const experiences = [
     title: "Chèo sup trên hồ",
     desc: "Mặt hồ yên, sáng sớm và chiều muộn rất đẹp. Phù hợp khách thích trải nghiệm chill nhẹ.",
     image:
-      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-10.jpeg",
+      "https://w.ladicdn.com/s800x700/59364fe77015e1b316b75df7/img_7083-20241208050848-u58yd.jpg",
   },
   {
     title: "BBQ & lửa trại",
     desc: "Ăn tối ngoài trời, ngồi cạnh bếp lửa, hợp cho cặp đôi, gia đình và nhóm bạn.",
     image:
-      "https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-08.jpeg",
+      "https://w.ladicdn.com/s650x600/59364fe77015e1b316b75df7/361635600_164888976609813_2633760584660443275_n-20230811170159-97nxa.jpg",
   },
 ];
 
@@ -56,7 +56,14 @@ export default function Home() {
       <header className="sticky top-0 z-30 border-b border-[#e9e0d4] bg-[#f8f4ee]/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
           <div>
-            <div className="text-lg font-semibold tracking-[0.08em] text-[#4b5a44] uppercase">Trốn Glamping</div>
+            <div className="flex items-center gap-3">
+              <img
+                src="https://static.ladipage.net/59364fe77015e1b316b75df7/logo_fina-20230708040439-bm5r5.png"
+                alt="Trốn Glamping"
+                className="h-9 w-9 rounded-full bg-white"
+              />
+              <div className="text-lg font-semibold tracking-[0.08em] text-[#4b5a44] uppercase">Trốn Glamping</div>
+            </div>
             <div className="text-xs text-[#7c7469]">The Retreat Space</div>
           </div>
 
@@ -88,7 +95,7 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-00-cover.jpeg"
+              src="https://w.ladicdn.com/s800x650/59364fe77015e1b316b75df7/dji_fly_20250920_173438_0008_1758365650452_photo-large-20251113062916-hhrqx.jpeg"
               alt="Trốn Glamping bên hồ Ghềnh Chè"
               className="h-full w-full object-cover"
             />
@@ -275,7 +282,7 @@ export default function Home() {
               </div>
               <div className="min-h-[340px]">
                 <img
-                  src="https://giadinhcamping.vn/wp-content/uploads/2023/09/tron-glamping-06.jpeg"
+                  src="https://w.ladicdn.com/s800x950/59364fe77015e1b316b75df7/img_7461-20251113063459-ddeld.jpeg"
                   alt="Không gian Trốn Glamping"
                   className="h-full w-full object-cover"
                 />
