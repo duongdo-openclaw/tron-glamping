@@ -1,5 +1,5 @@
-import { createSupabaseServerClient, hasSupabaseEnv } from "@/lib/supabase";
 import Link from "next/link";
+import { createSupabaseAdminClient } from "@/lib/supabase-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -15,9 +15,7 @@ type LeadRow = {
 };
 
 async function getLeads(): Promise<LeadRow[]> {
-  if (!hasSupabaseEnv) return [];
-
-  const supabase = createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("lead_requests")
     .select(
@@ -57,11 +55,6 @@ export default async function AdminLeadsPage() {
           </div>
         </div>
 
-        {!hasSupabaseEnv && (
-          <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-            Chưa có Supabase env trên Vercel → chưa đọc được lead thật.
-          </div>
-        )}
 
         <section className="mt-6 overflow-hidden rounded-3xl border border-[#e7dece] bg-white">
           <div className="border-b border-slate-100 px-5 py-4">
