@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   }
 
   const supabase = createSupabaseServerClient();
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("lead_requests")
     .insert({
       full_name,
@@ -39,9 +39,7 @@ export async function POST(req: Request) {
       check_out_date,
       message,
       source: "website",
-    })
-    .select("id,created_at")
-    .single();
+    });
 
   if (error) {
     return NextResponse.json(
@@ -50,5 +48,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true, lead: data });
+  return NextResponse.json({ ok: true });
 }
