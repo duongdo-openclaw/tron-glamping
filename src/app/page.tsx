@@ -12,6 +12,14 @@ type RoomType = {
   hero_image_url: string | null;
 };
 
+type MenuItem = {
+  id: string;
+  category: "food" | "drink" | "combo";
+  name: string;
+  description: string | null;
+  price: number;
+};
+
 const fallbackRoomTypes: RoomType[] = [
   {
     code: "GLAMPING_DOME",
@@ -31,16 +39,27 @@ export default function Home() {
 
   const [content, setContent] = useState<SiteContent>(defaultSiteContent);
   const [roomTypes, setRoomTypes] = useState<RoomType[]>(fallbackRoomTypes);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [selectedMenu, setSelectedMenu] = useState<Record<string, number>>({});
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("/api/public/home-data", { cache: "no-store" });
-      const json = await res.json().catch(() => null);
-      if (res.ok && json?.ok) {
-        if (json.content) setContent(json.content as SiteContent);
-        if (Array.isArray(json.room_types) && json.room_types.length) {
-          setRoomTypes(json.room_types as RoomType[]);
+      const [homeRes, menuRes] = await Promise.all([
+        fetch("/api/public/home-data", { cache: "no-store" }),
+        fetch("/api/public/menu", { cache: "no-store" }),
+      ]);
+
+      const homeJson = await homeRes.json().catch(() => null);
+      if (homeRes.ok && homeJson?.ok) {
+        if (homeJson.content) setContent(homeJson.content as SiteContent);
+        if (Array.isArray(homeJson.room_types) && homeJson.room_types.length) {
+          setRoomTypes(homeJson.room_types as RoomType[]);
         }
+      }
+
+      const menuJson = await menuRes.json().catch(() => null);
+      if (menuRes.ok && menuJson?.ok && Array.isArray(menuJson.items)) {
+        setMenuItems(menuJson.items as MenuItem[]);
       }
     })();
   }, []);
@@ -57,6 +76,12 @@ export default function Home() {
       check_in_date: fd.get("check_in_date") ? String(fd.get("check_in_date")) : null,
       check_out_date: fd.get("check_out_date") ? String(fd.get("check_out_date")) : null,
       requested_room_type: fd.get("requested_room_type") ? String(fd.get("requested_room_type")) : null,
+      email: fd.get("email") ? String(fd.get("email")) : null,
+      guest_count_adults: Number(fd.get("guest_count_adults") || 1),
+      guest_count_children: Number(fd.get("guest_count_children") || 0),
+      selected_menu_items: menuItems
+        .filter((m) => (selectedMenu[m.id] || 0) > 0)
+        .map((m) => ({ id: m.id, name: m.name, category: m.category, price: m.price, qty: selectedMenu[m.id] })),
       message: fd.get("message") ? String(fd.get("message")) : null,
     };
 
@@ -72,6 +97,7 @@ export default function Home() {
 
       setDone("Đã gửi yêu cầu! Bên Trốn sẽ liên hệ sớm.");
       form.reset();
+      setSelectedMenu({});
     } catch (e: any) {
       setError(e?.message || "Có lỗi, thử lại giúp mình nhé.");
     } finally {
@@ -125,6 +151,7 @@ export default function Home() {
               <form className="mt-6 grid gap-4" onSubmit={(e) => { e.preventDefault(); void submitLead(e.currentTarget); }}>
                 <input name="full_name" required className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Họ và tên" />
                 <input name="phone" required className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Số điện thoại" />
+                <input name="email" className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Email (tuỳ chọn)" />
                 <select name="requested_room_type" className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" defaultValue="">
                   <option value="">Chọn loại lều</option>
                   {roomTypes.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
@@ -133,6 +160,33 @@ export default function Home() {
                   <input name="check_in_date" className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" type="date" />
                   <input name="check_out_date" className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" type="date" />
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <input name="guest_count_adults" type="number" min={1} defaultValue={1} className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Người lớn" />
+                  <input name="guest_count_children" type="number" min={0} defaultValue={0} className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Trẻ em" />
+                </div>
+                {menuItems.length > 0 && (
+                  <details className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm">
+                    <summary className="cursor-pointer font-medium text-[#4b5a44]">{content.menuSectionTitle} (đồ ăn / đồ uống / combo)</summary>
+                    <div className="mt-3 grid gap-2">
+                      {menuItems.map((m) => (
+                        <label key={m.id} className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2">
+                          <div>
+                            <div className="text-sm font-medium">{m.name} <span className="text-xs text-slate-500">({m.category})</span></div>
+                            <div className="text-xs text-slate-500">{new Intl.NumberFormat("vi-VN").format(m.price)}đ</div>
+                          </div>
+                          <input
+                            type="number"
+                            min={0}
+                            value={selectedMenu[m.id] || 0}
+                            onChange={(e) => setSelectedMenu((prev) => ({ ...prev, [m.id]: Number(e.target.value || 0) }))}
+                            className="h-9 w-20 rounded-xl border border-slate-300 px-2 text-right"
+                          />
+                        </label>
+                      ))}
+                    </div>
+                  </details>
+                )}
+
                 <textarea name="message" rows={3} className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm" placeholder="Ghi chú" />
                 <button disabled={loading} className="h-12 rounded-full bg-[#4b5a44] text-sm font-semibold text-white disabled:opacity-60">
                   {loading ? "Đang gửi..." : "Gửi yêu cầu đặt chỗ"}
@@ -164,6 +218,22 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {menuItems.length > 0 && (
+          <section className="mx-auto max-w-7xl px-5 py-4 lg:px-8 lg:py-8">
+            <h2 className="text-3xl font-medium md:text-5xl">{content.menuSectionTitle}</h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {menuItems.map((item) => (
+                <div key={item.id} className="rounded-3xl border border-[#e7dece] bg-white p-5">
+                  <div className="text-xs uppercase tracking-[0.14em] text-[#9b907e]">{item.category}</div>
+                  <div className="mt-1 text-lg font-semibold text-[#1f1d1a]">{item.name}</div>
+                  <div className="mt-2 text-sm text-[#6f665a]">{item.description || "—"}</div>
+                  <div className="mt-3 text-sm font-semibold text-[#4b5a44]">{new Intl.NumberFormat("vi-VN").format(item.price)}đ</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mx-auto max-w-7xl px-5 pb-8 lg:px-8 lg:pb-16">
           <div className="overflow-hidden rounded-[2.2rem] bg-[#ede3d4] p-8 lg:p-12">
