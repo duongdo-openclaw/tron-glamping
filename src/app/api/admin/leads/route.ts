@@ -7,7 +7,7 @@ export async function GET() {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("lead_requests")
-    .select("id,full_name,phone,email,guest_count_adults,guest_count_children,requested_room_type,check_in_date,check_out_date,selected_menu_items,customer_status,message,created_at")
+    .select("id,customer_code,full_name,phone,email,guest_count_adults,guest_count_children,requested_room_type,check_in_date,check_out_date,selected_menu_items,customer_status,message,created_at")
     .order("created_at", { ascending: false })
     .limit(200);
 

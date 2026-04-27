@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 type LeadRow = {
   id: string;
+  customer_code?: string | null;
   full_name: string;
   phone: string;
   email: string | null;
@@ -147,6 +148,7 @@ export default function AdminLeadsPage() {
                         <td className="px-4 py-3 whitespace-nowrap text-slate-600">{new Date(l.created_at).toLocaleString("vi-VN")}</td>
                         <td className="px-4 py-3 min-w-[220px]">
                           <div className="font-semibold text-slate-800">{l.full_name}</div>
+                          <div className="mt-1 inline-flex rounded-full bg-[#f1eadf] px-2 py-1 text-[11px] font-semibold text-[#6f665a]">{l.customer_code || "Chưa có mã KH"}</div>
                           <div className="text-xs text-slate-600">{l.phone}</div>
                           <div className="text-xs text-slate-500">{l.email || "—"}</div>
                         </td>

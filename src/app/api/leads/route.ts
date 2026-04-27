@@ -43,7 +43,32 @@ export async function POST(req: Request) {
   }
 
   const supabase = createSupabaseServerClient();
-  const { error } = await supabase
+
+  function makeCustomerCode() {
+    const d = new Date();
+    const y = d.getFullYear().toString().slice(-2);
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const rnd = Math.floor(1000 + Math.random() * 9000);
+    return `KH${y}${m}${day}${rnd}`;
+  }
+
+  let customer_code = makeCustomerCode();
+
+  // Reuse the same customer code for returning customers by phone.
+  const { data: oldByPhone, error: oldByPhoneError } = await supabase
+    .from("lead_requests")
+    .select("customer_code")
+    .eq("phone", phone)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!oldByPhoneError && oldByPhone?.customer_code) {
+    customer_code = String(oldByPhone.customer_code);
+  }
+
+  let { error } = await supabase
     .from("lead_requests")
     .insert({
       full_name,
@@ -56,9 +81,34 @@ export async function POST(req: Request) {
       guest_count_children,
       selected_menu_items,
       message,
+      customer_code,
       customer_status: "new",
       source: "website",
     });
+
+  // Backward compatibility if DB not migrated yet (no customer_code column)
+  if (error && /customer_code/i.test(error.message || "")) {
+    const retry = await supabase
+      .from("lead_requests")
+      .insert({
+        full_name,
+        phone,
+        requested_room_type,
+        check_in_date,
+        check_out_date,
+        email,
+        guest_count_adults,
+        guest_count_children,
+        selected_menu_items,
+        message,
+        customer_status: "new",
+        source: "website",
+      });
+    error = retry.error;
+    if (!error) {
+      customer_code = "";
+    }
+  }
 
   if (error) {
     return NextResponse.json(
@@ -67,5 +117,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, customer_code });
 }
