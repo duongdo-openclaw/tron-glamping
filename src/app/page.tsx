@@ -253,6 +253,7 @@ export default function Home() {
             />
           </div>
           <div className="flex items-center gap-2">
+            <a href="/tra-cuu" className="rounded-full border border-[#d8cfbe] px-4 py-2 text-sm">Tra cứu</a>
             <a href="/menu" className="rounded-full border border-[#d8cfbe] px-4 py-2 text-sm">Menu</a>
             <a href="#booking" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white">Đặt chỗ</a>
           </div>
