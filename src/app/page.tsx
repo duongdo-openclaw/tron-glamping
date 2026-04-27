@@ -252,7 +252,10 @@ export default function Home() {
               className="h-14 w-auto bg-transparent"
             />
           </div>
-          <a href="#booking" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white">Đặt chỗ</a>
+          <div className="flex items-center gap-2">
+            <a href="/menu" className="rounded-full border border-[#d8cfbe] px-4 py-2 text-sm">Menu</a>
+            <a href="#booking" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-medium text-white">Đặt chỗ</a>
+          </div>
         </div>
       </header>
 
@@ -340,6 +343,15 @@ export default function Home() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+          <h2 className="text-3xl font-medium md:text-5xl">Hoạt động nổi bật</h2>
+          <div className="mt-6 grid gap-3 md:grid-cols-3">
+            {content.highlights.map((line) => (
+              <div key={line} className="rounded-2xl border border-[#e7dece] bg-white px-5 py-4 text-sm leading-6 text-[#5d554b]">• {line}</div>
+            ))}
+          </div>
+        </section>
+
         <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
           <h2 className="text-3xl font-medium md:text-5xl">{content.roomSectionTitle}</h2>
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
@@ -388,8 +400,11 @@ export default function Home() {
                     Thực đơn gồm món lẻ và combo cho nhóm đi nghỉ dưỡng. Anh/chị có thể xem nhanh ở đây và mở popup để chọn chi tiết.
                   </p>
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <button type="button" onClick={() => setMenuModalOpen(true)} className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-semibold text-white">
-                      Xem chi tiết menu
+                    <a href="/menu" className="rounded-full bg-[#4b5a44] px-5 py-2.5 text-sm font-semibold text-white">
+                      Xem menu
+                    </a>
+                    <button type="button" onClick={() => setMenuModalOpen(true)} className="rounded-full border border-[#d8cfbe] px-5 py-2.5 text-sm font-semibold text-[#4b5a44]">
+                      Chọn nhanh (popup)
                     </button>
                     <div className="rounded-full border border-[#d8cfbe] px-4 py-2 text-xs text-[#6f665a]">
                       {comboItems.length} combo • {foodDrinkItems.length} món lẻ
