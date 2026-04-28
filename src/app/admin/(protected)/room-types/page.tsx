@@ -11,6 +11,13 @@ type RoomType = {
   capacity_adults: number;
   capacity_children: number;
   base_price: number;
+  price_day?: number;
+  price_overnight?: number;
+  price_extra_hour?: number;
+  checkin_day_time?: string;
+  checkout_day_time?: string;
+  checkin_overnight_time?: string;
+  checkout_overnight_time?: string;
   hero_image_url: string | null;
   gallery_images?: string[];
   sort_order: number;
@@ -72,9 +79,24 @@ export default function AdminRoomTypesPage() {
             <div className="grid gap-3 md:grid-cols-2">
               <Field label="Tên" value={row.name} onChange={(v) => setRows((prev) => patch(prev, idx, { name: v }))} />
               <Field
-                label="Giá base"
+                label="Giá base (legacy)"
                 value={String(row.base_price ?? 0)}
                 onChange={(v) => setRows((prev) => patch(prev, idx, { base_price: Number(v || 0) }))}
+              />
+              <Field
+                label="Giá trong ngày"
+                value={String(row.price_day ?? 0)}
+                onChange={(v) => setRows((prev) => patch(prev, idx, { price_day: Number(v || 0) }))}
+              />
+              <Field
+                label="Giá qua đêm"
+                value={String(row.price_overnight ?? row.base_price ?? 0)}
+                onChange={(v) => setRows((prev) => patch(prev, idx, { price_overnight: Number(v || 0) }))}
+              />
+              <Field
+                label="Giá thêm giờ (/h)"
+                value={String(row.price_extra_hour ?? 150000)}
+                onChange={(v) => setRows((prev) => patch(prev, idx, { price_extra_hour: Number(v || 0) }))}
               />
               <Field
                 label="Sức chứa người lớn"
@@ -110,6 +132,13 @@ export default function AdminRoomTypesPage() {
                 className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
               />
             </label>
+
+            <div className="mt-3 grid gap-3 rounded-2xl border border-slate-200 p-4 md:grid-cols-2">
+              <Field label="Giờ nhận (trong ngày)" value={row.checkin_day_time || "14:00"} onChange={(v) => setRows((prev) => patch(prev, idx, { checkin_day_time: v }))} />
+              <Field label="Giờ trả (trong ngày)" value={row.checkout_day_time || "22:00"} onChange={(v) => setRows((prev) => patch(prev, idx, { checkout_day_time: v }))} />
+              <Field label="Giờ nhận (qua đêm)" value={row.checkin_overnight_time || "14:00"} onChange={(v) => setRows((prev) => patch(prev, idx, { checkin_overnight_time: v }))} />
+              <Field label="Giờ trả (qua đêm)" value={row.checkout_overnight_time || "12:00"} onChange={(v) => setRows((prev) => patch(prev, idx, { checkout_overnight_time: v }))} />
+            </div>
 
             <div className="mt-3 grid gap-3 rounded-2xl border border-slate-200 p-4">
               <div className="flex items-center justify-between gap-3">

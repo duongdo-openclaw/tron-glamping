@@ -14,6 +14,9 @@ type LeadRow = {
   check_in_date: string | null;
   check_out_date: string | null;
   selected_menu_items: Array<{ name: string; category: string; qty: number; price: number }> | null;
+  voucher_code?: string | null;
+  voucher_valid?: boolean | null;
+  voucher_discount_amount?: number | null;
   customer_status: string | null;
   message: string | null;
   created_at: string;
@@ -128,6 +131,7 @@ export default function AdminLeadsPage() {
                   <th className="px-4 py-3 font-medium">Khách hàng</th>
                   <th className="px-4 py-3 font-medium">Lưu trú</th>
                   <th className="px-4 py-3 font-medium">Ẩm thực</th>
+                  <th className="px-4 py-3 font-medium">Voucher</th>
                   <th className="px-4 py-3 font-medium">Trạng thái</th>
                   <th className="px-4 py-3 font-medium">Ghi chú</th>
                 </tr>
@@ -135,7 +139,7 @@ export default function AdminLeadsPage() {
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-6 text-slate-500">Chưa có dữ liệu phù hợp.</td>
+                    <td colSpan={7} className="px-4 py-6 text-slate-500">Chưa có dữ liệu phù hợp.</td>
                   </tr>
                 ) : (
                   filtered.map((l, idx) => {
@@ -171,6 +175,15 @@ export default function AdminLeadsPage() {
                           ) : (
                             "—"
                           )}
+                        </td>
+                        <td className="px-4 py-3 min-w-[180px] text-xs text-slate-700">
+                          {l.voucher_code ? (
+                            <>
+                              <div className="font-semibold">{l.voucher_code}</div>
+                              <div className={l.voucher_valid ? "text-emerald-700" : "text-rose-700"}>{l.voucher_valid ? "Hợp lệ" : "Không hợp lệ"}</div>
+                              {!!l.voucher_discount_amount && <div>Giảm: {new Intl.NumberFormat("vi-VN").format(l.voucher_discount_amount || 0)}{(l.voucher_discount_amount || 0) <= 100 ? "%" : "đ"}</div>}
+                            </>
+                          ) : "—"}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <select

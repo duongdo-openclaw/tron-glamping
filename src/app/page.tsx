@@ -9,6 +9,13 @@ type RoomType = {
   description: string | null;
   capacity_adults: number;
   base_price: number;
+  price_day?: number;
+  price_overnight?: number;
+  price_extra_hour?: number;
+  checkin_day_time?: string;
+  checkout_day_time?: string;
+  checkin_overnight_time?: string;
+  checkout_overnight_time?: string;
   hero_image_url: string | null;
   gallery_images?: string[];
 };
@@ -30,6 +37,13 @@ const fallbackRoomTypes: RoomType[] = [
     description: "Lake view, ideal for 2-4 guests.",
     capacity_adults: 4,
     base_price: 2000000,
+    price_day: 0,
+    price_overnight: 2000000,
+    price_extra_hour: 150000,
+    checkin_day_time: "14:00",
+    checkout_day_time: "22:00",
+    checkin_overnight_time: "14:00",
+    checkout_overnight_time: "12:00",
     hero_image_url:
       "https://w.ladicdn.com/s800x1000/59364fe77015e1b316b75df7/img_7457-20251113063529-mphok.jpeg",
   },
@@ -176,6 +190,7 @@ export default function Home() {
       selected_menu_items: menuItems
         .filter((m) => (selectedMenu[m.id] || 0) > 0)
         .map((m) => ({ id: m.id, name: m.name, category: m.category, price: m.price, qty: selectedMenu[m.id] })),
+      voucher_code: fd.get("voucher_code") ? String(fd.get("voucher_code")) : null,
       message: fd.get("message") ? String(fd.get("message")) : null,
     };
 
@@ -333,6 +348,7 @@ export default function Home() {
                   </details>
                 )}
 
+                <input name="voucher_code" className="h-12 rounded-2xl border border-[#e7ddcf] bg-white px-4 text-sm" placeholder="Mã khuyến mãi (nếu có)" />
                 <textarea name="message" rows={3} className="rounded-2xl border border-[#e7ddcf] bg-white px-4 py-3 text-sm" placeholder="Ghi chú" />
                 <button disabled={loading} className="h-12 rounded-full bg-[#4b5a44] text-sm font-semibold text-white disabled:opacity-60">
                   {loading ? "Đang gửi..." : "Gửi yêu cầu đặt chỗ"}
@@ -378,8 +394,23 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div className="mt-5 text-sm font-medium text-[#4b5a44]">
-                    {item.base_price > 0 ? `${new Intl.NumberFormat("vi-VN").format(item.base_price)}đ / đêm` : "Liên hệ"}
+                  <div className="mt-5 grid gap-1 text-sm text-[#4b5a44]">
+                    <div className="font-semibold">
+                      {((item.price_overnight ?? item.base_price) || 0) > 0
+                        ? `${new Intl.NumberFormat("vi-VN").format((item.price_overnight ?? item.base_price) || 0)}đ / qua đêm`
+                        : "Liên hệ"}
+                    </div>
+                    {Number(item.price_day || 0) > 0 && (
+                      <div className="text-xs text-[#6f665a]">
+                        Trong ngày ({item.checkin_day_time || "14:00"}–{item.checkout_day_time || "22:00"}): <b>{new Intl.NumberFormat("vi-VN").format(item.price_day || 0)}đ</b>
+                      </div>
+                    )}
+                    <div className="text-xs text-[#6f665a]">
+                      Thêm giờ: <b>{new Intl.NumberFormat("vi-VN").format(item.price_extra_hour || 150000)}đ/giờ</b>
+                    </div>
+                    <div className="text-[11px] text-[#6f665a]">
+                      Ghi chú: nếu lều trống ngày hôm trước, hỗ trợ nhận sớm từ <b>09:00</b> (dùng tiện ích chung miễn phí từ 9:00).
+                    </div>
                   </div>
                 </div>
               </article>

@@ -10,7 +10,7 @@ export async function GET() {
       supabase.from("site_content").select("value").eq("key", "site_content").maybeSingle(),
       supabase
         .from("room_types")
-        .select("code,name,description,capacity_adults,capacity_children,base_price,hero_image_url,gallery_images,sort_order,is_active")
+        .select("code,name,description,capacity_adults,capacity_children,base_price,price_day,price_overnight,price_extra_hour,checkin_day_time,checkout_day_time,checkin_overnight_time,checkout_overnight_time,hero_image_url,gallery_images,sort_order,is_active")
         .order("sort_order", { ascending: true }),
     ]);
 

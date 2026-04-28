@@ -14,6 +14,7 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
             <Link href="/admin/content" className="text-slate-600 hover:text-slate-900">Content</Link>
             <Link href="/admin/room-types" className="text-slate-600 hover:text-slate-900">Room types</Link>
             <Link href="/admin/menu" className="text-slate-600 hover:text-slate-900">Ẩm thực</Link>
+            <Link href="/admin/vouchers" className="text-slate-600 hover:text-slate-900">Vouchers</Link>
             <Link href="/admin/leads" className="text-slate-600 hover:text-slate-900">Leads</Link>
           </div>
 
